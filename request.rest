@@ -1,0 +1,53 @@
+POST http://localhost:3000/user/signup
+Content-Type: application/json
+
+{
+    "email": "das@g.com",
+    "name": "Daniel",
+    "password": "123abc",
+    "role": "NORMAL"
+}
+
+###
+
+POST http://localhost:3000/user/login
+Content-Type: application/json
+
+{
+    "email": "gabriel@g.com",
+    "password": "123abc"
+}
+
+###
+
+POST http://localhost:3000/band/register
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjllNjUxYzUzLWY1M2MtNDZmMS04ZTkxLTZiMzllZjJlOWVkMSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYyNDY3MzY2NiwiZXhwIjoxNjI0Njc5MDY2fQ.TG-RA3j1e_rpcADAHfYX-jUZDKwJlynJAUubJidRfUc
+Content-Type: application/json
+
+{
+    "name": "Shawn Mendes",
+    "musicGenre": "Pop",
+    "responsible": ""
+}
+
+###
+GET http://localhost:3000/band?id=6abfc7a2-0020-46b8-9f9a-dfb570904773
+
+
+###
+GET http://localhost:3000/band?name=maroon
+
+###
+POST http://localhost:3000/show/add
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjllNjUxYzUzLWY1M2MtNDZmMS04ZTkxLTZiMzllZjJlOWVkMSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYyNDc0ODU2MywiZXhwIjoxNjI0NzUzOTYzfQ.EhuPS4g5BtWRbcXhY0NTFRXNk269-zV2sBD404c4bMU
+Content-Type: application/json
+
+{
+    "band_id": "6abfc7a2-0020-46b8-9f9a-dfb570904773",
+    "start_time": 15,
+    "end_time": 17,
+    "week_day": "Friday"
+}
+
+###
+GET http://localhost:3000/show/friday
