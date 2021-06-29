@@ -14,7 +14,7 @@ export class UserBusiness {
   ) {}
 
   public async createUser(user: UserInputDTO) {
-    if (!user.name || !user.email || !user.password || !user.role) {
+    if (!user.name || !user.email || !user.password || !user.nickname) {
       throw new BaseError(422, "Missing input");
     }
 
@@ -31,25 +31,20 @@ export class UserBusiness {
     const hashPassword = await this.hashManager.hash(user.password);
 
     await this.userDatabase.createUser(
-      new User(
-        id,
-        user.name,
-        user.email,
-        hashPassword,
-        User.stringToUserRole(user.role)
-      )
+      new User(id, user.name, user.email, user.nickname, hashPassword)
     );
 
     const accessToken = this.authenticator.generateToken({
       id,
-      role: user.role,
     });
 
     return accessToken;
   }
 
-  async getUserByEmail(user: LoginInputDTO) {
-    const userFromDB = await this.userDatabase.getUserByEmail(user.email);
+  async getUserByEmailOrNickname(user: LoginInputDTO) {
+    let userFromDB = user.email
+      ? await this.userDatabase.getUserByEmail(user.email)
+      : await this.userDatabase.getUserByNickname(user.nickname);
 
     if (!userFromDB) {
       throw new BaseError(404, "User not found");
@@ -62,7 +57,6 @@ export class UserBusiness {
 
     const accessToken = this.authenticator.generateToken({
       id: userFromDB.getId(),
-      role: userFromDB.getRole(),
     });
 
     if (!hashCompare) {

@@ -2,10 +2,11 @@ POST http://localhost:3000/user/signup
 Content-Type: application/json
 
 {
-    "email": "das@g.com",
-    "name": "Daniel",
-    "password": "123abc",
-    "role": "NORMAL"
+    "email": "gabriel@g.com",
+    "name": "Gabriel",
+    "nickname": "gdmusse",
+    "password": "123abc"
+
 }
 
 ###
@@ -14,40 +15,28 @@ POST http://localhost:3000/user/login
 Content-Type: application/json
 
 {
-    "email": "gabriel@g.com",
+    "nickname": "gdmusse",
     "password": "123abc"
+
 }
 
 ###
-
-POST http://localhost:3000/band/register
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjllNjUxYzUzLWY1M2MtNDZmMS04ZTkxLTZiMzllZjJlOWVkMSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYyNDY3MzY2NiwiZXhwIjoxNjI0Njc5MDY2fQ.TG-RA3j1e_rpcADAHfYX-jUZDKwJlynJAUubJidRfUc
+POST http://localhost:3000/photo/create
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNDk4ODQ3NywiZXhwIjoxNjI0OTkzODc3fQ.aJ1Ad_3gL2P4YZtaB3DHWipVtyMzx1qVX6PpB3QDh3A
 Content-Type: application/json
 
 {
-    "name": "Shawn Mendes",
-    "musicGenre": "Pop",
-    "responsible": ""
+    "subtitle": "photo 2 subtitle",
+    "file": "photo 2 file",
+    "tags": ["tag1", "tag2", "bananinha"],
+    "collection": "photo collection 2"
 }
 
 ###
-GET http://localhost:3000/band?id=6abfc7a2-0020-46b8-9f9a-dfb570904773
-
-
-###
-GET http://localhost:3000/band?name=maroon
+GET http://localhost:3000/photo/all
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNDk5NTkxOSwiZXhwIjoxNjI1MDAxMzE5fQ.k2X-HKZ2QY2C2JxZVbleNQQFhFYk7-hyA-ZvVNXt8JA
 
 ###
-POST http://localhost:3000/show/add
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjllNjUxYzUzLWY1M2MtNDZmMS04ZTkxLTZiMzllZjJlOWVkMSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYyNDc0ODU2MywiZXhwIjoxNjI0NzUzOTYzfQ.EhuPS4g5BtWRbcXhY0NTFRXNk269-zV2sBD404c4bMU
-Content-Type: application/json
 
-{
-    "band_id": "6abfc7a2-0020-46b8-9f9a-dfb570904773",
-    "start_time": 15,
-    "end_time": 17,
-    "week_day": "Friday"
-}
-
-###
-GET http://localhost:3000/show/friday
+GET http://localhost:3000/photo/d72750f0-43fa-41c5-a745-3bdc2824d654
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNDk5NTkxOSwiZXhwIjoxNjI1MDAxMzE5fQ.k2X-HKZ2QY2C2JxZVbleNQQFhFYk7-hyA-ZvVNXt8JA
