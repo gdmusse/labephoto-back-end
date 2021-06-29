@@ -1,12 +1,10 @@
-import { BaseError } from "../error/BaseError";
-
 export class User {
   constructor(
     private id: string,
     private name: string,
     private email: string,
-    private password: string,
-    private role: UserRole
+    private nickname: string,
+    private password: string
   ) {}
 
   getId() {
@@ -21,12 +19,12 @@ export class User {
     return this.email;
   }
 
-  getPassword() {
-    return this.password;
+  getNickname() {
+    return this.nickname;
   }
 
-  getRole() {
-    return this.role;
+  getPassword() {
+    return this.password;
   }
 
   setId(id: string) {
@@ -41,49 +39,26 @@ export class User {
     this.email = email;
   }
 
+  setNickname(nickname: string) {
+    this.nickname = nickname;
+  }
+
   setPassword(password: string) {
     this.password = password;
   }
 
-  setRole(role: UserRole) {
-    this.role = role;
-  }
 
-  static stringToUserRole(input: string): UserRole {
-    switch (input) {
-      case "NORMAL":
-        return UserRole.NORMAL;
-      case "ADMIN":
-        return UserRole.ADMIN;
-      default:
-        throw new BaseError(422, "Invalid user role");
-    }
-  }
-
-  static toUserModel(user: any): User {
-    return new User(
-      user.id,
-      user.name,
-      user.email,
-      user.password,
-      User.stringToUserRole(user.role)
-    );
-  }
 }
 
 export interface UserInputDTO {
+  name: string;
+  nickname: string;
   email: string;
   password: string;
-  name: string;
-  role: string;
 }
 
 export interface LoginInputDTO {
   email: string;
   password: string;
-}
-
-export enum UserRole {
-  NORMAL = "NORMAL",
-  ADMIN = "ADMIN",
+  nickname: string;
 }
