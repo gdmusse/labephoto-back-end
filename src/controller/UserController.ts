@@ -28,8 +28,6 @@ export class UserController {
         res.status(409).send({ error: "This email is already registered" });
       }
     }
-
-    await BaseDatabase.destroyConnection();
   }
 
   async login(req: Request, res: Response) {
@@ -49,8 +47,6 @@ export class UserController {
       }
       res.status(error.statusCode).send({ error: error.message });
     }
-
-    await BaseDatabase.destroyConnection();
   }
 }
 

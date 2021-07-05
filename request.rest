@@ -11,7 +11,7 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:3000/user/login
+POST http://localhost:4000/user/login
 Content-Type: application/json
 
 {
@@ -21,22 +21,22 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3000/photo/create
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNDk4ODQ3NywiZXhwIjoxNjI0OTkzODc3fQ.aJ1Ad_3gL2P4YZtaB3DHWipVtyMzx1qVX6PpB3QDh3A
+POST http://localhost:4000/photo/create
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNTUwOTU0NSwiZXhwIjoxNjI1NTE0OTQ1fQ.uBmmFiaMvwsERXnhYSkRrOo6WtOzuOyiQ7uIqvAX_DY
 Content-Type: application/json
 
 {
-    "subtitle": "photo 2 subtitle",
-    "file": "photo 2 file",
+    "subtitle": "photo 3 subtitle",
+    "file": "https://www.hostinger.com.br/tutoriais/wp-content/uploads/sites/12/2019/08/O-que-e-url.png",
     "tags": ["tag1", "tag2", "bananinha"],
-    "collection": "photo collection 2"
+    "collection": "photo collection 3"
 }
 
 ###
-GET http://localhost:3000/photo/all
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNDk5NTkxOSwiZXhwIjoxNjI1MDAxMzE5fQ.k2X-HKZ2QY2C2JxZVbleNQQFhFYk7-hyA-ZvVNXt8JA
+GET http://localhost:4000/photo/all
+Authorization: 
 
 ###
 
-GET http://localhost:3000/photo/d72750f0-43fa-41c5-a745-3bdc2824d654
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNDk5NTkxOSwiZXhwIjoxNjI1MDAxMzE5fQ.k2X-HKZ2QY2C2JxZVbleNQQFhFYk7-hyA-ZvVNXt8JA
+GET http://localhost:4000/photo/d72750f0-43fa-41c5-a745-3bdc2824d654
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNTUwOTU0NSwiZXhwIjoxNjI1NTE0OTQ1fQ.uBmmFiaMvwsERXnhYSkRrOo6WtOzuOyiQ7uIqvAX_DY
