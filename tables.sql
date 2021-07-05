@@ -31,6 +31,6 @@ SELECT * FROM labephoto_tags;
 SELECT labephoto_photos.*, GROUP_CONCAT(labephoto_tags.tag)
 FROM labephoto_photos
 JOIN labephoto_tags ON labephoto_photos.id = labephoto_tags.photo_id
-GROUP BY id
+WHERE id = "3b4604b4-22f3-4eab-bd2c-c158ec84f05b"
 ;
 

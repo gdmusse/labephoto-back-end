@@ -50,6 +50,8 @@ export class PhotoBusiness {
   public async getPhotoById(id: string, token:string){
 
     const photo = await this.photoDatabase.getPhotoById(id);
+
+    
     
     const verifiedToken = this.authenticator.getData(token);
 
