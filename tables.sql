@@ -23,14 +23,19 @@ tag VARCHAR(255),
 FOREIGN KEY (photo_id) REFERENCES labephoto_photos(id)
 );
 
+delete from labephoto_photos where id = "d72750f0-43fa-41c5-a745-3bdc2824d654";
 
 SELECT * FROM labephoto_photos;
 
 SELECT * FROM labephoto_tags;
+
+
+delete from labephoto_tags where photo_id = "d72750f0-43fa-41c5-a745-3bdc2824d654";
 
 SELECT labephoto_photos.*, GROUP_CONCAT(labephoto_tags.tag)
 FROM labephoto_photos
 JOIN labephoto_tags ON labephoto_photos.id = labephoto_tags.photo_id
 WHERE id = "3b4604b4-22f3-4eab-bd2c-c158ec84f05b"
 ;
+SET SQL_SAFE_UPDATES = 0; 
 
