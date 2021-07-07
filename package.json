@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node ./src/index.ts",
-    "dev": "tsnd --transpile-only --ignore-watch node_modules ./src/index.ts"
+    "start": "tsc && node ./build/index.js",
+    "dev": "tsnd --transpile-only --ignore-watch node_modules ./src/index.ts",
+    "build": "tsc"
   },
   "keywords": [
     "api",
@@ -31,12 +32,9 @@
     "moment": "^2.27.0",
     "mysql": "^2.18.1",
     "ts-jest": "^26.1.0",
-    "ts-node": "^8.10.2",
-    "ts-node-dev": "^1.1.6",
     "typescript": "^3.9.6",
-    "uuid": "^8.2.0"
-  },
-  "devDependencies": {
+    "uuid": "^8.2.0",
     "@types/cors": "^2.8.10"
   }
+
 }
