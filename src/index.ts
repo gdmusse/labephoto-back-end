@@ -15,7 +15,9 @@ app.use(express.json());
 app.use("/user", userRouter);
 app.use("/photo", photoRouter);
 
-const server = app.listen(4000, () => {
+var port = process.env.PORT || 4000;
+
+const server = app.listen(port, () => {
   if (server) {
     const address = server.address() as AddressInfo;
     console.log(`Server running at http://localhost:${address.port}`);
