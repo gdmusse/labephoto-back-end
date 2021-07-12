@@ -1,4 +1,4 @@
-POST http://localhost:3000/user/signup
+POST http://localhost:4000/user/signup
 Content-Type: application/json
 
 {
@@ -22,21 +22,42 @@ Content-Type: application/json
 
 ###
 POST http://localhost:4000/photo/create
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNTUwOTU0NSwiZXhwIjoxNjI1NTE0OTQ1fQ.uBmmFiaMvwsERXnhYSkRrOo6WtOzuOyiQ7uIqvAX_DY
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjEwNjQ4OSwiZXhwIjoxNjI2MTExODg5fQ.XdQ3kuAfzcFm25Tt9QCudTrVAhHOsQeyzq_o4efM6kA
 Content-Type: application/json
 
 {
-    "subtitle": "photo 3 subtitle",
-    "file": "https://www.hostinger.com.br/tutoriais/wp-content/uploads/sites/12/2019/08/O-que-e-url.png",
-    "tags": ["tag1", "tag2", "bananinha"],
-    "collection": "photo collection 3"
+    "subtitle": "Poison Ivy",
+    "file": "https://upload.wikimedia.org/wikipedia/pt/7/7b/Detective_Comics_Vol_2_23.1_Poison_Ivy.jpg",
+    "tags": ["poison ivy", "dc", "villain", "batman"]
 }
 
 ###
 GET http://localhost:4000/photo/all
-Authorization: 
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjEwNjQ4OSwiZXhwIjoxNjI2MTExODg5fQ.XdQ3kuAfzcFm25Tt9QCudTrVAhHOsQeyzq_o4efM6kA
+###
+
+GET http://localhost:4000/photo/5c41cfe3-1062-4035-afda-0c2451e057aa
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjEwNjQ4OSwiZXhwIjoxNjI2MTExODg5fQ.XdQ3kuAfzcFm25Tt9QCudTrVAhHOsQeyzq_o4efM6kA
 
 ###
 
-GET http://localhost:4000/photo/d72750f0-43fa-41c5-a745-3bdc2824d654
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNTUwOTU0NSwiZXhwIjoxNjI1NTE0OTQ1fQ.uBmmFiaMvwsERXnhYSkRrOo6WtOzuOyiQ7uIqvAX_DY
+
+POST http://localhost:4000/collection/create
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjEwNjQ4OSwiZXhwIjoxNjI2MTExODg5fQ.XdQ3kuAfzcFm25Tt9QCudTrVAhHOsQeyzq_o4efM6kA
+Content-Type: application/json
+
+{
+    "title": "Batman",
+    "subtitle": "Characters from Batman's world",
+    "image": "https://www.fundacred.org.br/site/wp-content/uploads/2017/02/batman-logo-big.gif"
+}
+
+###
+
+POST http://localhost:4000/photo/5c41cfe3-1062-4035-afda-0c2451e057aa
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjExMzYzMiwiZXhwIjoxNjI2MTE5MDMyfQ.1CnbmzB9NkPVTVZmEVIVzYSMhVWz-y8LcmZDMHqbXQE
+Content-Type: application/json
+
+{
+   "collection_id": "8b4356dc-21a9-4ebf-b2cb-253628e7be97"
+}

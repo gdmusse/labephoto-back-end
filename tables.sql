@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS labephoto_photos (
   id VARCHAR(255) PRIMARY KEY,
   subtitle VARCHAR(255)  NOT NULL,
   author VARCHAR(255) NOT NULL,
-  date DATE NOT NULL,
+  date DATETIME NOT NULL,
   file VARCHAR(255)  NOT NULL,
   collection VARCHAR(255)  NOT NULL
 );
@@ -23,19 +23,43 @@ tag VARCHAR(255),
 FOREIGN KEY (photo_id) REFERENCES labephoto_photos(id)
 );
 
-delete from labephoto_photos where id = "d72750f0-43fa-41c5-a745-3bdc2824d654";
+CREATE TABLE IF NOT EXISTS labephoto_collections (
+id VARCHAR(255) PRIMARY KEY,
+title VARCHAR(255) UNIQUE NOT NULL,
+subtitle VARCHAR(255)  NOT NULL,
+author_id VARCHAR(255) NOT NULL,
+image VARCHAR(255),
+date DATETIME NOT NULL,
+FOREIGN KEY (author_id) REFERENCES labephoto_users(id)
+);
+  
+drop table labephoto_collections;
+
+drop table labephoto_collection_photos;
+
+CREATE TABLE IF NOT EXISTS labephoto_collection_photos (
+photo_id VARCHAR(255) NOT NULL,
+collection_id VARCHAR(255) NOT NULL,
+ date DATETIME NOT NULL,
+FOREIGN KEY (photo_id) REFERENCES labephoto_photos(id),
+FOREIGN KEY (collection_id) REFERENCES labephoto_collections(id)
+);
+
+delete from labephoto_photos where id = "88ddaa57-5f12-4cb6-bd78-ff5cda303eaa";
+
+
+SELECT * FROM labephoto_users;
 
 SELECT * FROM labephoto_photos;
 
 SELECT * FROM labephoto_tags;
 
+SELECT * FROM labephoto_collections;
 
-delete from labephoto_tags where photo_id = "d72750f0-43fa-41c5-a745-3bdc2824d654";
+SELECT * FROM  labephoto_collection_photos;
 
-SELECT labephoto_photos.*, GROUP_CONCAT(labephoto_tags.tag)
-FROM labephoto_photos
-JOIN labephoto_tags ON labephoto_photos.id = labephoto_tags.photo_id
-WHERE id = "3b4604b4-22f3-4eab-bd2c-c158ec84f05b"
-;
+delete from labephoto_collection_photos;
+
+
 SET SQL_SAFE_UPDATES = 0; 
 

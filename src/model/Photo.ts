@@ -3,11 +3,12 @@ export class Photo {
     private id: string,
     private subtitle: string,
     private author: string,
-    private date: Date,
+    private date: string,
     private file: string,
     private tags: string[],
     private collection: string
   ) {}
+  
   getId() {
     return this.id;
   }
@@ -46,7 +47,7 @@ export class Photo {
     this.author = author;
   }
 
-  setDate(date: Date) {
+  setDate(date: string) {
     this.date = date;
   }
 
@@ -66,6 +67,16 @@ export class Photo {
 export interface PhotoInputDTO {
    subtitle: string,
    file: string,
-   tags: string[],
-   collection: string
+   tags: string[]
+}
+
+export interface PhotoToCollectionInputDTO {
+  photo_id: string,
+  collection_id: string
+}
+
+export interface PhotoToCollectionOutputDTO {
+  photo_id: string,
+  collection_id: string,
+  date: string
 }
