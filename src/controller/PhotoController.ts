@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { PhotoToCollectionInputDTO, PhotoInputDTO } from "../model/Photo";
+import { PhotoToCollectionInputDTO, PhotoInputDTO, PhotoSearchInputDTO } from "../model/Photo";
 import photoBusiness from "../business/PhotoBusiness";
 
 export class PhotoController {
@@ -80,6 +80,27 @@ export class PhotoController {
       } else {
         res.status(error.statusCode).send({ error: error.message });
       }
+    }
+  }
+
+  async getByCondition(req: Request, res: Response) {
+    try {
+      const token = req.headers.authorization!;
+
+      const input: PhotoSearchInputDTO = {
+        author: req.query.author as string,
+        subtitle: req.query.subtitle as string,
+        tag: req.query.tag as string
+      }
+
+      const photo = await photoBusiness.getPhotoByCondition(input, token);
+
+      res.status(201).send({ photo });
+    } catch (error) {
+      if (!error.statusCode) {
+        error.statusCode = 400;
+      }
+      res.status(error.statusCode).send({ error: error.message });
     }
   }
 }

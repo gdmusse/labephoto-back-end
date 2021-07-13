@@ -6,6 +6,7 @@ import {
   PhotoToCollectionInputDTO,
   PhotoInputDTO,
   PhotoToCollectionOutputDTO,
+  PhotoSearchInputDTO,
 } from "../model/Photo";
 import authenticator, { Authenticator } from "../services/Authenticator";
 import idGenerator, { IdGenerator } from "../services/IdGenerator";
@@ -72,7 +73,7 @@ export class PhotoBusiness {
     if (!input.photo_id || !input.collection_id) {
       throw new BaseError(422, "Missing input");
     }
-    
+
     const verifiedToken = this.authenticator.getData(token);
 
     const photo = await this.photoDatabase.getPhotoById(input.photo_id);
@@ -81,9 +82,9 @@ export class PhotoBusiness {
       throw new BaseError(404, "Photo not found");
     }
 
-    const alreadyAdded = await this.photoDatabase.checkPhotoInCollection(input)
+    const alreadyAdded = await this.photoDatabase.checkPhotoInCollection(input);
 
-    if(alreadyAdded){
+    if (alreadyAdded) {
       throw new BaseError(404, "Photo is already added to collection");
     }
 
@@ -96,6 +97,32 @@ export class PhotoBusiness {
     };
 
     return await this.photoDatabase.addPhotoToCollection(output);
+  }
+
+  public async getPhotoByCondition(input: PhotoSearchInputDTO, token: string) {
+    if (
+      input.author === undefined &&
+      input.subtitle === undefined &&
+      input.tag === undefined
+    ) {
+      throw new BaseError(422, "Missing input");
+    }
+
+    const verifiedToken = this.authenticator.getData(token);
+
+    const photos = input.subtitle
+      ? await this.photoDatabase.searchPhotoBySubtitle(input.subtitle)
+      : input.author
+      ? await this.photoDatabase.searchPhotoByAuthor(input.author)
+      : input.tag
+      ? await this.photoDatabase.searchPhotoByTag(input.tag)
+      : null;
+
+    if (photos === null) {
+      throw new BaseError(404, "Sorry! No photo was found.");
+    }
+
+    return photos;
   }
 }
 

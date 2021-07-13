@@ -142,6 +142,129 @@ export class PhotoDatabase extends BaseDatabase {
       throw new Error(error.sqlMessage || error.message);
     }
   }
+
+  public async searchPhotoByAuthor(
+    author: string
+  ): Promise<Array<Photo> | Photo | null> {
+    try {
+      const result = await this.getConnection()
+        .select(
+          `${this.tableName}.*`,
+          this.getConnection().raw(
+            `GROUP_CONCAT(${this.secondTableName}.tag) as tags`
+          ),
+          this.getConnection().raw(`${this.thirdTableName}.nickname as author`)
+        )
+        .from(`${this.tableName}`)
+        .join(
+          `${this.secondTableName}`,
+          `${this.tableName}.id `,
+          `=`,
+          `${this.secondTableName}.photo_id`
+        )
+        .join(
+          `${this.thirdTableName}`,
+          `${this.tableName}.author`,
+          `=`,
+          `${this.thirdTableName}.id`
+        )
+        .groupBy(`${this.tableName}.id`)
+        .where(`${this.thirdTableName}.nickname`, `like`, `%${author}%`);
+
+      if (result.length === 0) {
+        return null;
+      } else {
+        result.forEach((photo: any) => {
+          photo.date = dayjs(photo.date).format("YYYY-MM-DD HH:mm:ss");
+        });
+        return result;
+      }
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  public async searchPhotoBySubtitle(
+    subtitle: string
+  ): Promise<Array<Photo> | Photo | null> {
+    try {
+      const result = await this.getConnection()
+        .select(
+          `${this.tableName}.*`,
+          this.getConnection().raw(
+            `GROUP_CONCAT(${this.secondTableName}.tag) as tags`
+          ),
+          this.getConnection().raw(`${this.thirdTableName}.nickname as author`)
+        )
+        .from(`${this.tableName}`)
+        .join(
+          `${this.secondTableName}`,
+          `${this.tableName}.id `,
+          `=`,
+          `${this.secondTableName}.photo_id`
+        )
+        .join(
+          `${this.thirdTableName}`,
+          `${this.tableName}.author`,
+          `=`,
+          `${this.thirdTableName}.id`
+        )
+        .groupBy(`${this.tableName}.id`)
+        .where(`${this.tableName}.subtitle`, `like`, `%${subtitle}%`);
+
+        if (result.length === 0) {
+          return null;
+        } else {
+          result.forEach((photo: any) => {
+            photo.date = dayjs(photo.date).format("YYYY-MM-DD HH:mm:ss");
+          });
+          return result;
+        }
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  public async searchPhotoByTag(
+    tag: string
+  ): Promise<Array<Photo> | Photo | null> {
+    try {
+      const result = await this.getConnection()
+        .select(
+          `${this.tableName}.*`,
+          this.getConnection().raw(
+            `GROUP_CONCAT(${this.secondTableName}.tag) as tags`
+          ),
+          this.getConnection().raw(`${this.thirdTableName}.nickname as author`)
+        )
+        .from(`${this.secondTableName}`)
+        .join(
+          `${this.tableName}`,
+          `${this.secondTableName}.photo_id `,
+          `=`,
+          `${this.tableName}.id`
+        )
+        .join(
+          `${this.thirdTableName}`,
+          `${this.tableName}.author`,
+          `=`,
+          `${this.thirdTableName}.id`
+        )
+        .groupBy(`${this.tableName}.id`)
+        .having(`tags`,`like`, `%${tag}%`)
+
+        if (result.length === 0) {
+          return null;
+        } else {
+          result.forEach((photo: any) => {
+            photo.date = dayjs(photo.date).format("YYYY-MM-DD HH:mm:ss");
+          });
+          return result;
+        }
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
 }
 
 export default new PhotoDatabase();
