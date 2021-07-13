@@ -29,7 +29,6 @@ export class CollectionBusiness {
 
       var now = dayjs().format("YYYY-MM-DD HH:mm:ss");
 
-      console.log("chegueio", collection);
       return await this.collectionDatabase.createPhotoCollection(
         new Collection(
           id,

@@ -19,7 +19,6 @@ export class UserDatabase extends BaseDatabase {
 
   public async createUser(user: User): Promise<void> {
     try {
-      console.log("date", new Date())
       await this.getConnection().insert(user).into(this.tableName);
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);

@@ -33,11 +33,11 @@ Content-Type: application/json
 
 ###
 GET http://localhost:4000/photo/all
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjEwNjQ4OSwiZXhwIjoxNjI2MTExODg5fQ.XdQ3kuAfzcFm25Tt9QCudTrVAhHOsQeyzq_o4efM6kA
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjE5Nzc2NywiZXhwIjoxNjI2MjAzMTY3fQ.Vvshqm05vnUKXoGdAgsDHjmashJkVC6TNOUToTHOvB8
+ 
 ###
-
 GET http://localhost:4000/photo/5c41cfe3-1062-4035-afda-0c2451e057aa
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjEwNjQ4OSwiZXhwIjoxNjI2MTExODg5fQ.XdQ3kuAfzcFm25Tt9QCudTrVAhHOsQeyzq_o4efM6kA
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjE5Nzc2NywiZXhwIjoxNjI2MjAzMTY3fQ.Vvshqm05vnUKXoGdAgsDHjmashJkVC6TNOUToTHOvB8
 
 ###
 
@@ -61,3 +61,9 @@ Content-Type: application/json
 {
    "collection_id": "8b4356dc-21a9-4ebf-b2cb-253628e7be97"
 }
+
+
+###
+GET http://localhost:4000/photo/search?tag=batman
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjE5Nzc2NywiZXhwIjoxNjI2MjAzMTY3fQ.Vvshqm05vnUKXoGdAgsDHjmashJkVC6TNOUToTHOvB8
+

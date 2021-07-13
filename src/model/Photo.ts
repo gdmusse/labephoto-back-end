@@ -80,3 +80,9 @@ export interface PhotoToCollectionOutputDTO {
   collection_id: string,
   date: string
 }
+
+export interface PhotoSearchInputDTO {
+   subtitle: string,
+   author: string,
+   tag: string
+}
