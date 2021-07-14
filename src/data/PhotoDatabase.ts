@@ -52,18 +52,33 @@ export class PhotoDatabase extends BaseDatabase {
 
   public async getAllPhotos(): Promise<Array<Photo>> {
     try {
-      const result = await this.getConnection().raw(`
-      SELECT ${this.tableName}.*, GROUP_CONCAT(${this.secondTableName}.tag) as tags
-      FROM ${this.tableName}
-      JOIN ${this.secondTableName} ON ${this.tableName}.id = ${this.secondTableName}.photo_id
-      GROUP BY id
-    `);
-
-      result[0].forEach((photo: any) => {
+      const result = await this.getConnection()
+        .select(
+          `${this.tableName}.*`,
+          this.getConnection().raw(
+            `GROUP_CONCAT(${this.secondTableName}.tag) as tags`
+          ),
+          this.getConnection().raw(`${this.thirdTableName}.nickname as author`)
+        )
+        .from(`${this.tableName}`)
+        .join(
+          `${this.secondTableName}`,
+          `${this.tableName}.id `,
+          `=`,
+          `${this.secondTableName}.photo_id`
+        )
+        .join(
+          `${this.thirdTableName}`,
+          `${this.tableName}.author`,
+          `=`,
+          `${this.thirdTableName}.id`
+        )
+        .groupBy(`${this.tableName}.id`);
+      result.forEach((photo: any) => {
         photo.date = dayjs(photo.date).format("YYYY-MM-DD HH:mm:ss");
       });
 
-      return result[0];
+      return result;
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
     }
@@ -212,14 +227,14 @@ export class PhotoDatabase extends BaseDatabase {
         .groupBy(`${this.tableName}.id`)
         .where(`${this.tableName}.subtitle`, `like`, `%${subtitle}%`);
 
-        if (result.length === 0) {
-          return null;
-        } else {
-          result.forEach((photo: any) => {
-            photo.date = dayjs(photo.date).format("YYYY-MM-DD HH:mm:ss");
-          });
-          return result;
-        }
+      if (result.length === 0) {
+        return null;
+      } else {
+        result.forEach((photo: any) => {
+          photo.date = dayjs(photo.date).format("YYYY-MM-DD HH:mm:ss");
+        });
+        return result;
+      }
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
     }
@@ -251,16 +266,16 @@ export class PhotoDatabase extends BaseDatabase {
           `${this.thirdTableName}.id`
         )
         .groupBy(`${this.tableName}.id`)
-        .having(`tags`,`like`, `%${tag}%`)
+        .having(`tags`, `like`, `%${tag}%`);
 
-        if (result.length === 0) {
-          return null;
-        } else {
-          result.forEach((photo: any) => {
-            photo.date = dayjs(photo.date).format("YYYY-MM-DD HH:mm:ss");
-          });
-          return result;
-        }
+      if (result.length === 0) {
+        return null;
+      } else {
+        result.forEach((photo: any) => {
+          photo.date = dayjs(photo.date).format("YYYY-MM-DD HH:mm:ss");
+        });
+        return result;
+      }
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
     }
