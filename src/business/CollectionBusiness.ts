@@ -43,6 +43,20 @@ export class CollectionBusiness {
       throw new Error(error.sqlMessage || error.message);
     }
   }
+
+  public async getCollections(token: string) {
+    try {
+      const verifiedToken = this.authenticator.getData(token);
+
+      const collections = await this.collectionDatabase.getCollections(
+        verifiedToken.id
+      );
+
+      return collections;
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
 }
 
 export default new CollectionBusiness(

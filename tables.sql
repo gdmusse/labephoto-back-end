@@ -58,8 +58,15 @@ SELECT * FROM labephoto_collections;
 
 SELECT * FROM  labephoto_collection_photos;
 
-delete from labephoto_collection_photos;
-
+delete from labephoto_photos where id ="8ade66d2-f703-47f5-aafa-75d011f4ab27";
+delete from labephoto_tags where photo_id ="8ade66d2-f703-47f5-aafa-75d011f4ab27";
 
 SET SQL_SAFE_UPDATES = 0; 
 
+SELECT labephoto_photos.*, GROUP_CONCAT(labephoto_tags.tag) as tags, labephoto_users.nickname as author
+FROM labephoto_photos
+JOIN labephoto_tags ON labephoto_photos.id = labephoto_tags.photo_id
+JOIN labephoto_users ON labephoto_photos.author = labephoto_users.id
+GROUP BY id
+HAVING tags like "%%"
+;
