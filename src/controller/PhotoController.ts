@@ -83,6 +83,23 @@ export class PhotoController {
     }
   }
 
+  async getByCollection(req: Request, res: Response) {
+    try {
+      const token = req.headers.authorization!;
+
+      const collection_id = req.params.collection_id;
+
+      const photos = await photoBusiness.getPhotosInCollection(collection_id, token);
+
+      res.status(201).send({ photos });
+    } catch (error) {
+      if (!error.statusCode) {
+        error.statusCode = 400;
+      }
+      res.status(error.statusCode).send({ error: error.message });
+    }
+  }
+
   async getByCondition(req: Request, res: Response) {
     try {
       const token = req.headers.authorization!;

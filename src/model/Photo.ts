@@ -6,7 +6,7 @@ export class Photo {
     private date: string,
     private file: string,
     private tags: string[],
-    private collection: string
+    private collections: string[]
   ) {}
   
   getId() {
@@ -33,7 +33,7 @@ export class Photo {
   }
 
   getCollection() {
-    return this.collection;
+    return this.collections;
   }
 
   setId(id: string) {
@@ -59,8 +59,8 @@ export class Photo {
     this.tags = tags;
   }
 
-  setCollection(collection: string) {
-    this.collection = collection;
+  setCollection(collections: string[]) {
+    this.collections = collections;
   }
 }
 
@@ -85,4 +85,15 @@ export interface PhotoSearchInputDTO {
    subtitle: string,
    author: string,
    tag: string
+}
+
+export interface PhotoInCollectionOutputDTO {
+   id: string,
+   subtitle: string,
+   author: string,
+   date: string,
+   added_date: string,
+   file: string,
+   tags: string[],
+
 }

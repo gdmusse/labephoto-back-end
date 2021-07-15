@@ -12,6 +12,7 @@ export class PhotoDatabase extends BaseDatabase {
   protected secondTableName: string = "labephoto_tags";
   protected thirdTableName: string = "labephoto_users";
   protected fourthTableName: string = "labephoto_collection_photos";
+  protected fifthTableName: string = "labephoto_collections";
 
   private toPhotoModel(dbModel?: any): Photo | null {
     return (
@@ -23,7 +24,7 @@ export class PhotoDatabase extends BaseDatabase {
         dbModel.date,
         dbModel.file,
         dbModel.tags,
-        dbModel.collection
+        dbModel.collections
       )
     );
   }
@@ -58,7 +59,10 @@ export class PhotoDatabase extends BaseDatabase {
           this.getConnection().raw(
             `GROUP_CONCAT(${this.secondTableName}.tag) as tags`
           ),
-          this.getConnection().raw(`${this.thirdTableName}.nickname as author`)
+          this.getConnection().raw(`${this.thirdTableName}.nickname as author`),
+          this.getConnection().raw(
+            `GROUP_CONCAT(DISTINCT ${this.fifthTableName}.title) as collections`
+          )
         )
         .from(`${this.tableName}`)
         .join(
@@ -72,6 +76,18 @@ export class PhotoDatabase extends BaseDatabase {
           `${this.tableName}.author`,
           `=`,
           `${this.thirdTableName}.id`
+        )
+        .leftJoin(
+          `${this.fourthTableName}`,
+          `${this.tableName}.id`,
+          `=`,
+          `${this.fourthTableName}.photo_id`
+        )
+        .leftJoin(
+          `${this.fifthTableName}`,
+          `${this.fourthTableName}.collection_id`,
+          `=`,
+          `${this.fifthTableName}.id`
         )
         .groupBy(`${this.tableName}.id`);
       result.forEach((photo: any) => {
@@ -92,7 +108,10 @@ export class PhotoDatabase extends BaseDatabase {
           this.getConnection().raw(
             `GROUP_CONCAT(${this.secondTableName}.tag) as tags`
           ),
-          this.getConnection().raw(`${this.thirdTableName}.nickname as author`)
+          this.getConnection().raw(`${this.thirdTableName}.nickname as author`),
+          this.getConnection().raw(
+            `GROUP_CONCAT(DISTINCT ${this.fifthTableName}.title) as collections`
+          )
         )
         .from(`${this.tableName}`)
         .join(
@@ -107,8 +126,19 @@ export class PhotoDatabase extends BaseDatabase {
           `=`,
           `${this.thirdTableName}.id`
         )
+        .leftJoin(
+          `${this.fourthTableName}`,
+          `${this.tableName}.id`,
+          `=`,
+          `${this.fourthTableName}.photo_id`
+        )
+        .leftJoin(
+          `${this.fifthTableName}`,
+          `${this.fourthTableName}.collection_id`,
+          `=`,
+          `${this.fifthTableName}.id`
+        )
         .where(`${this.tableName}.id`, `=`, `${id}`);
-
       if (result[0].id === null) {
         return null;
       } else {
@@ -158,6 +188,62 @@ export class PhotoDatabase extends BaseDatabase {
     }
   }
 
+  public async getPhotosInCollection(
+    collection: string
+  ): Promise<Array<Photo> | Photo | null> {
+    try {
+      const result = await this.getConnection()
+        .select(
+          `${this.fourthTableName}.photo_id`,
+          this.getConnection().raw(
+            `GROUP_CONCAT(DISTINCT ${this.fourthTableName}.date) as added_date`
+          ),
+          `${this.tableName}.subtitle`,
+          `${this.tableName}.author`,
+          `${this.tableName}.date`,
+          `${this.tableName}.file`,
+          this.getConnection().raw(
+            `GROUP_CONCAT(${this.secondTableName}.tag) as tags`
+          ),
+          this.getConnection().raw(`${this.thirdTableName}.nickname as author`)
+        )
+        .from(`${this.fourthTableName}`)
+        .join(
+          `${this.tableName}`,
+          `${this.fourthTableName}.photo_id `,
+          `=`,
+          `${this.tableName}.id`
+        )
+        .join(
+          `${this.secondTableName}`,
+          `${this.fourthTableName}.photo_id `,
+          `=`,
+          `${this.secondTableName}.photo_id`
+        )
+        .join(
+          `${this.thirdTableName}`,
+          `${this.tableName}.author`,
+          `=`,
+          `${this.thirdTableName}.id`
+        )
+        .groupBy(`${this.fourthTableName}.photo_id`)
+        .where({
+          collection_id: collection,
+        });
+
+      if (result.length > 0) {
+        result.forEach((photo: any) => {
+          photo.date = dayjs(photo.date).format("YYYY-MM-DD HH:mm:ss");
+        });
+        return result;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
   public async searchPhotoByAuthor(
     author: string
   ): Promise<Array<Photo> | Photo | null> {
@@ -168,7 +254,10 @@ export class PhotoDatabase extends BaseDatabase {
           this.getConnection().raw(
             `GROUP_CONCAT(${this.secondTableName}.tag) as tags`
           ),
-          this.getConnection().raw(`${this.thirdTableName}.nickname as author`)
+          this.getConnection().raw(`${this.thirdTableName}.nickname as author`),
+          this.getConnection().raw(
+            `GROUP_CONCAT(DISTINCT ${this.fifthTableName}.title) as collections`
+          )
         )
         .from(`${this.tableName}`)
         .join(
@@ -182,6 +271,18 @@ export class PhotoDatabase extends BaseDatabase {
           `${this.tableName}.author`,
           `=`,
           `${this.thirdTableName}.id`
+        )
+        .leftJoin(
+          `${this.fourthTableName}`,
+          `${this.tableName}.id`,
+          `=`,
+          `${this.fourthTableName}.photo_id`
+        )
+        .leftJoin(
+          `${this.fifthTableName}`,
+          `${this.fourthTableName}.collection_id`,
+          `=`,
+          `${this.fifthTableName}.id`
         )
         .groupBy(`${this.tableName}.id`)
         .where(`${this.thirdTableName}.nickname`, `like`, `%${author}%`);
@@ -209,7 +310,10 @@ export class PhotoDatabase extends BaseDatabase {
           this.getConnection().raw(
             `GROUP_CONCAT(${this.secondTableName}.tag) as tags`
           ),
-          this.getConnection().raw(`${this.thirdTableName}.nickname as author`)
+          this.getConnection().raw(`${this.thirdTableName}.nickname as author`),
+          this.getConnection().raw(
+            `GROUP_CONCAT(DISTINCT ${this.fifthTableName}.title) as collections`
+          )
         )
         .from(`${this.tableName}`)
         .join(
@@ -223,6 +327,18 @@ export class PhotoDatabase extends BaseDatabase {
           `${this.tableName}.author`,
           `=`,
           `${this.thirdTableName}.id`
+        )
+        .leftJoin(
+          `${this.fourthTableName}`,
+          `${this.tableName}.id`,
+          `=`,
+          `${this.fourthTableName}.photo_id`
+        )
+        .leftJoin(
+          `${this.fifthTableName}`,
+          `${this.fourthTableName}.collection_id`,
+          `=`,
+          `${this.fifthTableName}.id`
         )
         .groupBy(`${this.tableName}.id`)
         .where(`${this.tableName}.subtitle`, `like`, `%${subtitle}%`);
@@ -250,7 +366,10 @@ export class PhotoDatabase extends BaseDatabase {
           this.getConnection().raw(
             `GROUP_CONCAT(${this.secondTableName}.tag) as tags`
           ),
-          this.getConnection().raw(`${this.thirdTableName}.nickname as author`)
+          this.getConnection().raw(`${this.thirdTableName}.nickname as author`),
+          this.getConnection().raw(
+            `GROUP_CONCAT(DISTINCT ${this.fifthTableName}.title) as collections`
+          )
         )
         .from(`${this.secondTableName}`)
         .join(
@@ -264,6 +383,18 @@ export class PhotoDatabase extends BaseDatabase {
           `${this.tableName}.author`,
           `=`,
           `${this.thirdTableName}.id`
+        )
+        .leftJoin(
+          `${this.fourthTableName}`,
+          `${this.tableName}.id`,
+          `=`,
+          `${this.fourthTableName}.photo_id`
+        )
+        .leftJoin(
+          `${this.fifthTableName}`,
+          `${this.fourthTableName}.collection_id`,
+          `=`,
+          `${this.fifthTableName}.id`
         )
         .groupBy(`${this.tableName}.id`)
         .having(`tags`, `like`, `%${tag}%`);

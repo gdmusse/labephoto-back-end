@@ -2,9 +2,9 @@ POST http://localhost:4000/user/signup
 Content-Type: application/json
 
 {
-    "email": "gabriel@g.com",
-    "name": "Gabriel",
-    "nickname": "gdmusse",
+    "email": "semnada@g.com",
+    "name": "Semnada",
+    "nickname": "semnada",
     "password": "123abc"
 
 }
@@ -33,11 +33,11 @@ Content-Type: application/json
 
 ###
 GET http://localhost:4000/photo/all
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjIyMjQ2MSwiZXhwIjoxNjI2MjI3ODYxfQ.4LCNlL4NeGzfA71T3KRvbg1WVmfRGhcioJzXmkqCFhU
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjI4MzMyNCwiZXhwIjoxNjI2Mjg4NzI0fQ.sZDCyqtQNrun19KLWaLzU0CRlW_9-QiddV_lInGNPHE
 
 ###
-GET http://localhost:4000/photo/5c41cfe3-1062-4035-afda-0c2451e057aa
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjE5Nzc2NywiZXhwIjoxNjI2MjAzMTY3fQ.Vvshqm05vnUKXoGdAgsDHjmashJkVC6TNOUToTHOvB8
+GET http://localhost:4000/photo/acfec48b-f4d5-4900-9783-e83e330d0f97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjI4MzMyNCwiZXhwIjoxNjI2Mjg4NzI0fQ.sZDCyqtQNrun19KLWaLzU0CRlW_9-QiddV_lInGNPHE
 
 ###
 
@@ -55,15 +55,23 @@ Content-Type: application/json
 ###
 
 POST http://localhost:4000/photo/5c41cfe3-1062-4035-afda-0c2451e057aa
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjExMzYzMiwiZXhwIjoxNjI2MTE5MDMyfQ.1CnbmzB9NkPVTVZmEVIVzYSMhVWz-y8LcmZDMHqbXQE
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjI4NDgyNywiZXhwIjoxNjI2MjkwMjI3fQ.MMmfOUFYi32rBKPTWPFp8f94HQp8s473F8HsowfkD7o
 Content-Type: application/json
 
 {
-   "collection_id": "8b4356dc-21a9-4ebf-b2cb-253628e7be97"
+   "collection_id": "7ea1e9d9-2b19-48b9-83cc-db6b6a8800fa"
 }
 
 
 ###
 GET http://localhost:4000/photo/search?tag=batman
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjE5Nzc2NywiZXhwIjoxNjI2MjAzMTY3fQ.Vvshqm05vnUKXoGdAgsDHjmashJkVC6TNOUToTHOvB8
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjI4NDgyNywiZXhwIjoxNjI2MjkwMjI3fQ.MMmfOUFYi32rBKPTWPFp8f94HQp8s473F8HsowfkD7o
 
+###
+
+GET http://localhost:4000/collection
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjI4NDgyNywiZXhwIjoxNjI2MjkwMjI3fQ.MMmfOUFYi32rBKPTWPFp8f94HQp8s473F8HsowfkD7o
+
+###
+GET http://localhost:4000/photo/collection/8b4356dc-21a9-4ebf-b2cb-253628e7be97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjI4MzMyNCwiZXhwIjoxNjI2Mjg4NzI0fQ.sZDCyqtQNrun19KLWaLzU0CRlW_9-QiddV_lInGNPHE

@@ -37,7 +37,7 @@ export class PhotoBusiness {
         now,
         photo.file,
         photo.tags,
-        ""
+        []
       )
     );
   }
@@ -97,6 +97,18 @@ export class PhotoBusiness {
     };
 
     return await this.photoDatabase.addPhotoToCollection(output);
+  }
+
+  public async getPhotosInCollection(id: string, token: string) {
+    const photos = await this.photoDatabase.getPhotosInCollection(id);
+
+    const verifiedToken = this.authenticator.getData(token);
+
+    if (photos === null) {
+      throw new BaseError(404, "No photo was added to this collection yet.");
+    }
+
+    return photos;
   }
 
   public async getPhotoByCondition(input: PhotoSearchInputDTO, token: string) {
