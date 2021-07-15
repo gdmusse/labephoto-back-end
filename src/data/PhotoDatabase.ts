@@ -205,7 +205,8 @@ export class PhotoDatabase extends BaseDatabase {
           this.getConnection().raw(
             `GROUP_CONCAT(${this.secondTableName}.tag) as tags`
           ),
-          this.getConnection().raw(`${this.thirdTableName}.nickname as author`)
+          this.getConnection().raw(`${this.thirdTableName}.nickname as author`),
+          this.getConnection().raw(`${this.fifthTableName}.title as collection_title`)
         )
         .from(`${this.fourthTableName}`)
         .join(
@@ -225,6 +226,12 @@ export class PhotoDatabase extends BaseDatabase {
           `${this.tableName}.author`,
           `=`,
           `${this.thirdTableName}.id`
+        )
+        .join(
+          `${this.fifthTableName}`,
+          `${this.fifthTableName}.id`,
+          `=`,
+          `${this.fourthTableName}.collection_id`
         )
         .groupBy(`${this.fourthTableName}.photo_id`)
         .where({
