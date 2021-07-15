@@ -43,9 +43,11 @@ export class PhotoBusiness {
   }
 
   public async getAllPhotos(token: string) {
-    const photos = await this.photoDatabase.getAllPhotos();
+    
 
     const verifiedToken = this.authenticator.getData(token);
+
+    const photos = await this.photoDatabase.getAllPhotos(verifiedToken.id);
 
     if (photos.length === 0) {
       throw new BaseError(404, "No photos created yet");
@@ -55,9 +57,11 @@ export class PhotoBusiness {
   }
 
   public async getPhotoById(id: string, token: string) {
-    const photo = await this.photoDatabase.getPhotoById(id);
+
 
     const verifiedToken = this.authenticator.getData(token);
+
+    const photo = await this.photoDatabase.getPhotoById(id, verifiedToken.id);
 
     if (photo === null) {
       throw new BaseError(404, "Photo not found");
@@ -76,7 +80,7 @@ export class PhotoBusiness {
 
     const verifiedToken = this.authenticator.getData(token);
 
-    const photo = await this.photoDatabase.getPhotoById(input.photo_id);
+    const photo = await this.photoDatabase.getPhotoById(input.photo_id, verifiedToken.id);
 
     if (photo === null) {
       throw new BaseError(404, "Photo not found");
@@ -123,11 +127,11 @@ export class PhotoBusiness {
     const verifiedToken = this.authenticator.getData(token);
 
     const photos = input.subtitle
-      ? await this.photoDatabase.searchPhotoBySubtitle(input.subtitle)
+      ? await this.photoDatabase.searchPhotoBySubtitle(input.subtitle, verifiedToken.id)
       : input.author
-      ? await this.photoDatabase.searchPhotoByAuthor(input.author)
+      ? await this.photoDatabase.searchPhotoByAuthor(input.author, verifiedToken.id)
       : input.tag
-      ? await this.photoDatabase.searchPhotoByTag(input.tag)
+      ? await this.photoDatabase.searchPhotoByTag(input.tag, verifiedToken.id)
       : null;
 
     if (photos === null) {

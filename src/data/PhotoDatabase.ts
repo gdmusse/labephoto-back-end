@@ -8,11 +8,11 @@ import {
 import { BaseDatabase } from "./BaseDatabase";
 
 export class PhotoDatabase extends BaseDatabase {
-  protected tableName: string = "labephoto_photos";
-  protected secondTableName: string = "labephoto_tags";
-  protected thirdTableName: string = "labephoto_users";
-  protected fourthTableName: string = "labephoto_collection_photos";
-  protected fifthTableName: string = "labephoto_collections";
+  protected photosTable: string = "labephoto_photos";
+  protected tagsTable: string = "labephoto_tags";
+  protected usersTable: string = "labephoto_users";
+  protected collectionsPhotosTable: string = "labephoto_collection_photos";
+  protected collectionsTable: string = "labephoto_collections";
 
   private toPhotoModel(dbModel?: any): Photo | null {
     return (
@@ -39,106 +39,112 @@ export class PhotoDatabase extends BaseDatabase {
           date: photo.getDate(),
           file: photo.getFile(),
         })
-        .into(this.tableName);
+        .into(this.photosTable);
 
       for (var tag of photo.getTags()) {
         await this.getConnection()
           .insert({ photo_id: photo.getId(), tag })
-          .into(this.secondTableName);
+          .into(this.tagsTable);
       }
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
     }
   }
 
-  public async getAllPhotos(): Promise<Array<Photo>> {
+  public async getAllPhotos(id: string): Promise<Array<Photo>> {
     try {
+      const outerThis = this;
       const result = await this.getConnection()
         .select(
-          `${this.tableName}.*`,
+          `${this.photosTable}.*`,
           this.getConnection().raw(
-            `GROUP_CONCAT(${this.secondTableName}.tag) as tags`
+            `GROUP_CONCAT(${this.tagsTable}.tag) as tags`
           ),
-          this.getConnection().raw(`${this.thirdTableName}.nickname as author`),
+          this.getConnection().raw(`${this.usersTable}.nickname as author`),
           this.getConnection().raw(
-            `GROUP_CONCAT(DISTINCT ${this.fifthTableName}.title) as collections`
+            `GROUP_CONCAT(DISTINCT ${this.collectionsTable}.title) as collections`
           )
         )
-        .from(`${this.tableName}`)
+        .from(`${this.photosTable}`)
         .join(
-          `${this.secondTableName}`,
-          `${this.tableName}.id `,
+          `${this.tagsTable}`,
+          `${this.photosTable}.id `,
           `=`,
-          `${this.secondTableName}.photo_id`
+          `${this.tagsTable}.photo_id`
         )
         .join(
-          `${this.thirdTableName}`,
-          `${this.tableName}.author`,
+          `${this.usersTable}`,
+          `${this.photosTable}.author`,
           `=`,
-          `${this.thirdTableName}.id`
+          `${this.usersTable}.id`
         )
         .leftJoin(
-          `${this.fourthTableName}`,
-          `${this.tableName}.id`,
+          `${this.collectionsPhotosTable}`,
+          `${this.photosTable}.id`,
           `=`,
-          `${this.fourthTableName}.photo_id`
+          `${this.collectionsPhotosTable}.photo_id`
         )
-        .leftJoin(
-          `${this.fifthTableName}`,
-          `${this.fourthTableName}.collection_id`,
-          `=`,
-          `${this.fifthTableName}.id`
-        )
-        .groupBy(`${this.tableName}.id`);
+        .leftJoin(`${this.collectionsTable}`, function () {
+          this.on(
+            `${outerThis.collectionsTable}.id`,
+            `=`,
+            `${outerThis.collectionsPhotosTable}.collection_id`
+          ).onIn(`${outerThis.collectionsTable}.author_id`, [id]);
+        })
+        .groupBy(`${this.photosTable}.id`);
       result.forEach((photo: any) => {
         photo.date = dayjs(photo.date).format("YYYY-MM-DD HH:mm:ss");
       });
-
       return result;
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
     }
   }
 
-  public async getPhotoById(id: string): Promise<Photo | null> {
+  public async getPhotoById(
+    photo_id: string,
+    id: string
+  ): Promise<Photo | null> {
     try {
+      const outerThis = this;
       const result = await this.getConnection()
         .select(
-          `${this.tableName}.*`,
+          `${this.photosTable}.*`,
           this.getConnection().raw(
-            `GROUP_CONCAT(${this.secondTableName}.tag) as tags`
+            `GROUP_CONCAT(${this.tagsTable}.tag) as tags`
           ),
-          this.getConnection().raw(`${this.thirdTableName}.nickname as author`),
+          this.getConnection().raw(`${this.usersTable}.nickname as author`),
           this.getConnection().raw(
-            `GROUP_CONCAT(DISTINCT ${this.fifthTableName}.title) as collections`
+            `GROUP_CONCAT(DISTINCT ${this.collectionsTable}.title) as collections`
           )
         )
-        .from(`${this.tableName}`)
+        .from(`${this.photosTable}`)
         .join(
-          `${this.secondTableName}`,
-          `${this.tableName}.id `,
+          `${this.tagsTable}`,
+          `${this.photosTable}.id `,
           `=`,
-          `${this.secondTableName}.photo_id`
+          `${this.tagsTable}.photo_id`
         )
         .join(
-          `${this.thirdTableName}`,
-          `${this.tableName}.author`,
+          `${this.usersTable}`,
+          `${this.photosTable}.author`,
           `=`,
-          `${this.thirdTableName}.id`
+          `${this.usersTable}.id`
         )
         .leftJoin(
-          `${this.fourthTableName}`,
-          `${this.tableName}.id`,
+          `${this.collectionsPhotosTable}`,
+          `${this.photosTable}.id`,
           `=`,
-          `${this.fourthTableName}.photo_id`
+          `${this.collectionsPhotosTable}.photo_id`
         )
-        .leftJoin(
-          `${this.fifthTableName}`,
-          `${this.fourthTableName}.collection_id`,
-          `=`,
-          `${this.fifthTableName}.id`
-        )
-        .where(`${this.tableName}.id`, `=`, `${id}`);
+        .leftJoin(`${this.collectionsTable}`, function () {
+          this.on(
+            `${outerThis.collectionsTable}.id`,
+            `=`,
+            `${outerThis.collectionsPhotosTable}.collection_id`
+          ).onIn(`${outerThis.collectionsTable}.author_id`, [id]);
+        })
+        .where(`${this.photosTable}.id`, `=`, `${photo_id}`);
       if (result[0].id === null) {
         return null;
       } else {
@@ -160,7 +166,7 @@ export class PhotoDatabase extends BaseDatabase {
           collection_id: collection.collection_id,
           date: collection.date,
         })
-        .into(this.fourthTableName);
+        .into(this.collectionsPhotosTable);
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
     }
@@ -172,7 +178,7 @@ export class PhotoDatabase extends BaseDatabase {
     try {
       const result = await this.getConnection()
         .select("*")
-        .from(`${this.fourthTableName}`)
+        .from(`${this.collectionsPhotosTable}`)
         .where({
           photo_id: collection.photo_id,
           collection_id: collection.collection_id,
@@ -194,46 +200,48 @@ export class PhotoDatabase extends BaseDatabase {
     try {
       const result = await this.getConnection()
         .select(
-          `${this.fourthTableName}.photo_id`,
+          `${this.collectionsPhotosTable}.photo_id`,
           this.getConnection().raw(
-            `GROUP_CONCAT(DISTINCT ${this.fourthTableName}.date) as added_date`
+            `GROUP_CONCAT(DISTINCT ${this.collectionsPhotosTable}.date) as added_date`
           ),
-          `${this.tableName}.subtitle`,
-          `${this.tableName}.author`,
-          `${this.tableName}.date`,
-          `${this.tableName}.file`,
+          `${this.photosTable}.subtitle`,
+          `${this.photosTable}.author`,
+          `${this.photosTable}.date`,
+          `${this.photosTable}.file`,
           this.getConnection().raw(
-            `GROUP_CONCAT(${this.secondTableName}.tag) as tags`
+            `GROUP_CONCAT(${this.tagsTable}.tag) as tags`
           ),
-          this.getConnection().raw(`${this.thirdTableName}.nickname as author`),
-          this.getConnection().raw(`${this.fifthTableName}.title as collection_title`)
+          this.getConnection().raw(`${this.usersTable}.nickname as author`),
+          this.getConnection().raw(
+            `${this.collectionsTable}.title as collection_title`
+          )
         )
-        .from(`${this.fourthTableName}`)
+        .from(`${this.collectionsPhotosTable}`)
         .join(
-          `${this.tableName}`,
-          `${this.fourthTableName}.photo_id `,
+          `${this.photosTable}`,
+          `${this.collectionsPhotosTable}.photo_id `,
           `=`,
-          `${this.tableName}.id`
-        )
-        .join(
-          `${this.secondTableName}`,
-          `${this.fourthTableName}.photo_id `,
-          `=`,
-          `${this.secondTableName}.photo_id`
+          `${this.photosTable}.id`
         )
         .join(
-          `${this.thirdTableName}`,
-          `${this.tableName}.author`,
+          `${this.tagsTable}`,
+          `${this.collectionsPhotosTable}.photo_id `,
           `=`,
-          `${this.thirdTableName}.id`
+          `${this.tagsTable}.photo_id`
         )
         .join(
-          `${this.fifthTableName}`,
-          `${this.fifthTableName}.id`,
+          `${this.usersTable}`,
+          `${this.photosTable}.author`,
           `=`,
-          `${this.fourthTableName}.collection_id`
+          `${this.usersTable}.id`
         )
-        .groupBy(`${this.fourthTableName}.photo_id`)
+        .join(
+          `${this.collectionsTable}`,
+          `${this.collectionsTable}.id`,
+          `=`,
+          `${this.collectionsPhotosTable}.collection_id`
+        )
+        .groupBy(`${this.collectionsPhotosTable}.photo_id`)
         .where({
           collection_id: collection,
         });
@@ -252,47 +260,50 @@ export class PhotoDatabase extends BaseDatabase {
   }
 
   public async searchPhotoByAuthor(
-    author: string
+    author: string,
+    id: string
   ): Promise<Array<Photo> | Photo | null> {
     try {
+      const outerThis = this;
       const result = await this.getConnection()
         .select(
-          `${this.tableName}.*`,
+          `${this.photosTable}.*`,
           this.getConnection().raw(
-            `GROUP_CONCAT(${this.secondTableName}.tag) as tags`
+            `GROUP_CONCAT(${this.tagsTable}.tag) as tags`
           ),
-          this.getConnection().raw(`${this.thirdTableName}.nickname as author`),
+          this.getConnection().raw(`${this.usersTable}.nickname as author`),
           this.getConnection().raw(
-            `GROUP_CONCAT(DISTINCT ${this.fifthTableName}.title) as collections`
+            `GROUP_CONCAT(DISTINCT ${this.collectionsTable}.title) as collections`
           )
         )
-        .from(`${this.tableName}`)
+        .from(`${this.photosTable}`)
         .join(
-          `${this.secondTableName}`,
-          `${this.tableName}.id `,
+          `${this.tagsTable}`,
+          `${this.photosTable}.id `,
           `=`,
-          `${this.secondTableName}.photo_id`
+          `${this.tagsTable}.photo_id`
         )
         .join(
-          `${this.thirdTableName}`,
-          `${this.tableName}.author`,
+          `${this.usersTable}`,
+          `${this.photosTable}.author`,
           `=`,
-          `${this.thirdTableName}.id`
+          `${this.usersTable}.id`
         )
         .leftJoin(
-          `${this.fourthTableName}`,
-          `${this.tableName}.id`,
+          `${this.collectionsPhotosTable}`,
+          `${this.photosTable}.id`,
           `=`,
-          `${this.fourthTableName}.photo_id`
+          `${this.collectionsPhotosTable}.photo_id`
         )
-        .leftJoin(
-          `${this.fifthTableName}`,
-          `${this.fourthTableName}.collection_id`,
-          `=`,
-          `${this.fifthTableName}.id`
-        )
-        .groupBy(`${this.tableName}.id`)
-        .where(`${this.thirdTableName}.nickname`, `like`, `%${author}%`);
+        .leftJoin(`${this.collectionsTable}`, function () {
+          this.on(
+            `${outerThis.collectionsTable}.id`,
+            `=`,
+            `${outerThis.collectionsPhotosTable}.collection_id`
+          ).onIn(`${outerThis.collectionsTable}.author_id`, [id]);
+        })
+        .groupBy(`${this.photosTable}.id`)
+        .where(`${this.usersTable}.nickname`, `like`, `%${author}%`);
 
       if (result.length === 0) {
         return null;
@@ -308,47 +319,50 @@ export class PhotoDatabase extends BaseDatabase {
   }
 
   public async searchPhotoBySubtitle(
-    subtitle: string
+    subtitle: string,
+    id: string
   ): Promise<Array<Photo> | Photo | null> {
     try {
+      const outerThis = this;
       const result = await this.getConnection()
         .select(
-          `${this.tableName}.*`,
+          `${this.photosTable}.*`,
           this.getConnection().raw(
-            `GROUP_CONCAT(${this.secondTableName}.tag) as tags`
+            `GROUP_CONCAT(${this.tagsTable}.tag) as tags`
           ),
-          this.getConnection().raw(`${this.thirdTableName}.nickname as author`),
+          this.getConnection().raw(`${this.usersTable}.nickname as author`),
           this.getConnection().raw(
-            `GROUP_CONCAT(DISTINCT ${this.fifthTableName}.title) as collections`
+            `GROUP_CONCAT(DISTINCT ${this.collectionsTable}.title) as collections`
           )
         )
-        .from(`${this.tableName}`)
+        .from(`${this.photosTable}`)
         .join(
-          `${this.secondTableName}`,
-          `${this.tableName}.id `,
+          `${this.tagsTable}`,
+          `${this.photosTable}.id `,
           `=`,
-          `${this.secondTableName}.photo_id`
+          `${this.tagsTable}.photo_id`
         )
         .join(
-          `${this.thirdTableName}`,
-          `${this.tableName}.author`,
+          `${this.usersTable}`,
+          `${this.photosTable}.author`,
           `=`,
-          `${this.thirdTableName}.id`
+          `${this.usersTable}.id`
         )
         .leftJoin(
-          `${this.fourthTableName}`,
-          `${this.tableName}.id`,
+          `${this.collectionsPhotosTable}`,
+          `${this.photosTable}.id`,
           `=`,
-          `${this.fourthTableName}.photo_id`
+          `${this.collectionsPhotosTable}.photo_id`
         )
-        .leftJoin(
-          `${this.fifthTableName}`,
-          `${this.fourthTableName}.collection_id`,
-          `=`,
-          `${this.fifthTableName}.id`
-        )
-        .groupBy(`${this.tableName}.id`)
-        .where(`${this.tableName}.subtitle`, `like`, `%${subtitle}%`);
+        .leftJoin(`${this.collectionsTable}`, function () {
+          this.on(
+            `${outerThis.collectionsTable}.id`,
+            `=`,
+            `${outerThis.collectionsPhotosTable}.collection_id`
+          ).onIn(`${outerThis.collectionsTable}.author_id`, [id]);
+        })
+        .groupBy(`${this.photosTable}.id`)
+        .where(`${this.photosTable}.subtitle`, `like`, `%${subtitle}%`);
 
       if (result.length === 0) {
         return null;
@@ -364,46 +378,49 @@ export class PhotoDatabase extends BaseDatabase {
   }
 
   public async searchPhotoByTag(
-    tag: string
+    tag: string,
+    id: string
   ): Promise<Array<Photo> | Photo | null> {
     try {
+      const outerThis = this;
       const result = await this.getConnection()
         .select(
-          `${this.tableName}.*`,
+          `${this.photosTable}.*`,
           this.getConnection().raw(
-            `GROUP_CONCAT(${this.secondTableName}.tag) as tags`
+            `GROUP_CONCAT(${this.tagsTable}.tag) as tags`
           ),
-          this.getConnection().raw(`${this.thirdTableName}.nickname as author`),
+          this.getConnection().raw(`${this.usersTable}.nickname as author`),
           this.getConnection().raw(
-            `GROUP_CONCAT(DISTINCT ${this.fifthTableName}.title) as collections`
+            `GROUP_CONCAT(DISTINCT ${this.collectionsTable}.title) as collections`
           )
         )
-        .from(`${this.secondTableName}`)
+        .from(`${this.tagsTable}`)
         .join(
-          `${this.tableName}`,
-          `${this.secondTableName}.photo_id `,
+          `${this.photosTable}`,
+          `${this.tagsTable}.photo_id `,
           `=`,
-          `${this.tableName}.id`
+          `${this.photosTable}.id`
         )
         .join(
-          `${this.thirdTableName}`,
-          `${this.tableName}.author`,
+          `${this.usersTable}`,
+          `${this.photosTable}.author`,
           `=`,
-          `${this.thirdTableName}.id`
+          `${this.usersTable}.id`
         )
         .leftJoin(
-          `${this.fourthTableName}`,
-          `${this.tableName}.id`,
+          `${this.collectionsPhotosTable}`,
+          `${this.photosTable}.id`,
           `=`,
-          `${this.fourthTableName}.photo_id`
+          `${this.collectionsPhotosTable}.photo_id`
         )
-        .leftJoin(
-          `${this.fifthTableName}`,
-          `${this.fourthTableName}.collection_id`,
-          `=`,
-          `${this.fifthTableName}.id`
-        )
-        .groupBy(`${this.tableName}.id`)
+        .leftJoin(`${this.collectionsTable}`, function () {
+          this.on(
+            `${outerThis.collectionsTable}.id`,
+            `=`,
+            `${outerThis.collectionsPhotosTable}.collection_id`
+          ).onIn(`${outerThis.collectionsTable}.author_id`, [id]);
+        })
+        .groupBy(`${this.photosTable}.id`)
         .having(`tags`, `like`, `%${tag}%`);
 
       if (result.length === 0) {

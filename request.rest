@@ -15,7 +15,7 @@ POST http://localhost:4000/user/login
 Content-Type: application/json
 
 {
-    "nickname": "gdmusse",
+    "nickname": "semnada",
     "password": "123abc"
 
 }
@@ -33,11 +33,11 @@ Content-Type: application/json
 
 ###
 GET http://localhost:4000/photo/all
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjI4MzMyNCwiZXhwIjoxNjI2Mjg4NzI0fQ.sZDCyqtQNrun19KLWaLzU0CRlW_9-QiddV_lInGNPHE
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjM4NjQyNywiZXhwIjoxNjI2MzkxODI3fQ.7AwMuaLIFk2izvtNgjWldnPrHrKTGE0JpNuyE4mZDec
 
 ###
-GET http://localhost:4000/photo/acfec48b-f4d5-4900-9783-e83e330d0f97
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjI4MzMyNCwiZXhwIjoxNjI2Mjg4NzI0fQ.sZDCyqtQNrun19KLWaLzU0CRlW_9-QiddV_lInGNPHE
+GET http://localhost:4000/photo/5c41cfe3-1062-4035-afda-0c2451e057aa
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMwZjZmNmY4LThmYzMtNGY3ZC1hNTVlLWRjZjc5YWEyODRmOSIsImlhdCI6MTYyNjM4NjkwNCwiZXhwIjoxNjI2MzkyMzA0fQ.q1xrBciIC8Wk9JFrAXGNPkthNyM0eiSt7aKpoIiJYj0
 
 ###
 
@@ -65,13 +65,12 @@ Content-Type: application/json
 
 ###
 GET http://localhost:4000/photo/search?tag=batman
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjI4NDgyNywiZXhwIjoxNjI2MjkwMjI3fQ.MMmfOUFYi32rBKPTWPFp8f94HQp8s473F8HsowfkD7o
+Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMwZjZmNmY4LThmYzMtNGY3ZC1hNTVlLWRjZjc5YWEyODRmOSIsImlhdCI6MTYyNjM4NzI3MywiZXhwIjoxNjI2MzkyNjczfQ.bI-9-55pv-_W3x2i5b-drVdIlnlz-44ruKS7OHqiWr0
 
 ###
 
 GET http://localhost:4000/collection
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjI4NDgyNywiZXhwIjoxNjI2MjkwMjI3fQ.MMmfOUFYi32rBKPTWPFp8f94HQp8s473F8HsowfkD7o
-
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMwZjZmNmY4LThmYzMtNGY3ZC1hNTVlLWRjZjc5YWEyODRmOSIsImlhdCI6MTYyNjM4NjkwNCwiZXhwIjoxNjI2MzkyMzA0fQ.q1xrBciIC8Wk9JFrAXGNPkthNyM0eiSt7aKpoIiJYj0
 ###
 GET http://localhost:4000/photo/collection/8b4356dc-21a9-4ebf-b2cb-253628e7be97
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjM4MDI1NiwiZXhwIjoxNjI2Mzg1NjU2fQ.N9EYSbhvF6dFkTwMNuXYjBHHsu-ueYoDzxwkahnsuI0
