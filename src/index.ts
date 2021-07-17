@@ -9,7 +9,7 @@ import { collectionRouter } from "./routes/CollectionRouter";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: true }));
 
 app.use(express.json());
 
