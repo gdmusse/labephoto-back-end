@@ -2,9 +2,9 @@
 
 * TBD
 
-[x] 1. edit photo (?)
-[x] 2. delete photo 
-[ ] 3. edit collection
-[ ] 4. remove collection
-[ ] 5. remove photo from collection 
+[x] edit photo (?)
+[x] delete photo 
+[ ] edit collection
+[ ] remove collection
+[ ] remove photo from collection 
 
