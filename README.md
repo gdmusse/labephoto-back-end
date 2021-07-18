@@ -2,7 +2,8 @@
 
 * TBD
 
-- [x] edit photo (?)
+- [x] edit photo
+      - delete/add tag
 - [x] delete photo 
 - [ ] edit collection
 - [ ] remove collection
