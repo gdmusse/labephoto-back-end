@@ -70,6 +70,11 @@ export interface PhotoInputDTO {
    tags: string[]
 }
 
+export interface PhotoUpdateInputDTO {
+  subtitle?: string,
+  file?: string,
+}
+
 export interface PhotoToCollectionInputDTO {
   photo_id: string,
   collection_id: string

@@ -15,23 +15,37 @@ POST http://localhost:4000/user/login
 Content-Type: application/json
 
 {
-    "nickname": "semnada",
+    "nickname": "gdmusse",
     "password": "123abc"
 
 }
 
 ###
 POST http://localhost:4000/photo/create
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjEwNjQ4OSwiZXhwIjoxNjI2MTExODg5fQ.XdQ3kuAfzcFm25Tt9QCudTrVAhHOsQeyzq_o4efM6kA
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjU3MTA2MSwiZXhwIjoxNjI2NTc2NDYxfQ.xXmJDR6Uls29PrJukA8ELMMB5giP5C1JczdQ7zHa32s
 Content-Type: application/json
 
 {
-    "subtitle": "Poison Ivy",
+    "subtitle": "teste",
     "file": "https://upload.wikimedia.org/wikipedia/pt/7/7b/Detective_Comics_Vol_2_23.1_Poison_Ivy.jpg",
     "tags": ["poison ivy", "dc", "villain", "batman"]
 }
 
 ###
+PUT  http://localhost:4000/photo/5c41cfe3-1062-4035-afda-0c2451e057aa
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjU3MDEwOSwiZXhwIjoxNjI2NTc1NTA5fQ.z3A8TQSfY0JrqoQtR-nkGpVaqbUg-RjVU-DP9xDJi78
+Content-Type: application/json
+
+{
+    "subtitle": "Batman"
+}
+
+###
+DELETE http://localhost:4000/photo/14f18312-df2f-42fd-adf1-663f721ec221
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjU3MTA2MSwiZXhwIjoxNjI2NTc2NDYxfQ.xXmJDR6Uls29PrJukA8ELMMB5giP5C1JczdQ7zHa32s
+
+###
+
 GET http://localhost:4000/photo/all
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjM4NjQyNywiZXhwIjoxNjI2MzkxODI3fQ.7AwMuaLIFk2izvtNgjWldnPrHrKTGE0JpNuyE4mZDec
 
