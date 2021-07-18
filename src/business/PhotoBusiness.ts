@@ -7,6 +7,7 @@ import {
   PhotoInputDTO,
   PhotoToCollectionOutputDTO,
   PhotoSearchInputDTO,
+  PhotoUpdateInputDTO,
 } from "../model/Photo";
 import authenticator, { Authenticator } from "../services/Authenticator";
 import idGenerator, { IdGenerator } from "../services/IdGenerator";
@@ -54,6 +55,53 @@ export class PhotoBusiness {
     }
 
     return photos;
+  }
+
+  
+  public async updatePhotoById(id: string, token: string, photo: PhotoUpdateInputDTO) {
+    if (!photo.subtitle && !photo.file) {
+      throw new BaseError(422, "Nothing changed.");
+    }
+
+    const verifiedToken = this.authenticator.getData(token);
+
+    const photoUpdated = await this.photoDatabase.updatePhoto(id, photo, verifiedToken.id);
+
+    return photoUpdated;
+  }
+
+  public async addTagToPhoto(id: string, token: string, tag: string) {
+    if (!tag) {
+      throw new BaseError(422, "Missing input");
+    }
+
+    const verifiedToken = this.authenticator.getData(token);
+
+    const photoUpdated = await this.photoDatabase.addTagToPhoto(id, tag, verifiedToken.id);
+
+    return photoUpdated;
+  }
+
+  public async deletePhotoById(id: string, token: string) {
+
+    const verifiedToken = this.authenticator.getData(token);
+
+    const photoUpdated = await this.photoDatabase.deletePhoto(id, verifiedToken.id);
+
+    return photoUpdated;
+  }
+
+    
+  public async deleteTagFromPhoto(id: string, token: string, tag: string) {
+    if (!tag) {
+      throw new BaseError(422, "Missing input");
+    }
+
+    const verifiedToken = this.authenticator.getData(token);
+
+    const photoUpdated = await this.photoDatabase.deleteTagFromPhoto(id, tag, verifiedToken.id);
+
+    return photoUpdated;
   }
 
   public async getPhotoById(id: string, token: string) {

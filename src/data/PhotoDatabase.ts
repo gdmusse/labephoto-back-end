@@ -4,6 +4,7 @@ import {
   PhotoInputDTO,
   PhotoToCollectionInputDTO,
   PhotoToCollectionOutputDTO,
+  PhotoUpdateInputDTO,
 } from "../model/Photo";
 import { BaseDatabase } from "./BaseDatabase";
 
@@ -46,6 +47,103 @@ export class PhotoDatabase extends BaseDatabase {
           .insert({ photo_id: photo.getId(), tag })
           .into(this.tagsTable);
       }
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  public async updatePhoto(
+    photo_id: string,
+    input: PhotoUpdateInputDTO,
+    user_id: string
+  ): Promise<any> {
+    try {
+      const result = await this.getConnection()
+        .update({
+          subtitle: input.subtitle,
+          file: input.file,
+        })
+        .from(this.photosTable)
+        .where({ id: photo_id, author: user_id });
+      return result;
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  public async addTagToPhoto(
+    photo_id: string,
+    tag: string,
+    user_id: string
+  ): Promise<number[] | void> {
+    try {
+      const checkAuthor = await this.getConnection()
+        .select()
+        .into(this.photosTable)
+        .where({ id: photo_id, author: user_id });
+
+      if (checkAuthor.length !== 0) {
+        const duplicateTest = await this.getConnection()
+          .select()
+          .from(this.tagsTable)
+          .where({ photo_id, tag });
+
+        if (duplicateTest.length === 0) {
+          const tags = await this.getConnection()
+            .insert({ photo_id, tag })
+            .into(this.tagsTable);
+
+          return tags;
+        } else {
+          return undefined;
+        }
+      }
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+  public async deleteTagFromPhoto(
+    photo_id: string,
+    tag: string,
+    user_id: string
+  ): Promise<number | undefined> {
+    try {
+      const checkAuthor = await this.getConnection()
+        .select()
+        .into(this.photosTable)
+        .where({ id: photo_id, author: user_id });
+
+      if (checkAuthor.length !== 0) {
+        const duplicateTest = await this.getConnection()
+          .select()
+          .from(this.tagsTable)
+          .where({ photo_id, tag });
+
+        if (duplicateTest.length !== 0) {
+          const result = await this.getConnection()
+            .delete()
+            .from(this.tagsTable)
+            .where({ photo_id, tag });
+          return result;
+        }
+      }
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  public async deletePhoto(photo_id: string, user_id: string): Promise<any> {
+    try {
+      await this.getConnection()
+        .delete()
+        .from(this.tagsTable)
+        .where({ photo_id });
+
+      const result = await this.getConnection()
+        .delete()
+        .from(this.photosTable)
+        .where({ id: photo_id, author: user_id });
+      return result;
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
     }

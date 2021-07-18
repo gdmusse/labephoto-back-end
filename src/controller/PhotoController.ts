@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
-import { PhotoToCollectionInputDTO, PhotoInputDTO, PhotoSearchInputDTO } from "../model/Photo";
+import {
+  PhotoToCollectionInputDTO,
+  PhotoInputDTO,
+  PhotoSearchInputDTO,
+  PhotoUpdateInputDTO,
+} from "../model/Photo";
 import photoBusiness from "../business/PhotoBusiness";
 
 export class PhotoController {
@@ -32,6 +37,72 @@ export class PhotoController {
       const photos = await photoBusiness.getAllPhotos(token);
 
       res.status(201).send({ photos });
+    } catch (error) {
+      if (!error.statusCode) {
+        error.statusCode = 400;
+      }
+      res.status(error.statusCode).send({ error: error.message });
+    }
+  }
+
+  async updateById(req: Request, res: Response) {
+    try {
+      const token = req.headers.authorization!;
+
+      const id = req.params.id;
+
+      const input: PhotoUpdateInputDTO = {
+        subtitle: req.body.subtitle,
+        file: req.body.file,
+      };
+
+      const tag: string = req.body.tag;
+
+      let message;
+      let result;
+
+      if (input.subtitle || input.file) {
+        result = await photoBusiness.updatePhotoById(id, token, input);
+        message = "Photo updated succesfully.";
+      } else {
+        result = await photoBusiness.addTagToPhoto(id, token, tag);
+        message = "Tag added succesfully.";
+        if (result === undefined) {
+          message = "Tag already exists.";
+        }
+      }
+
+      res.status(201).send({ message });
+    } catch (error) {
+      if (!error.statusCode) {
+        error.statusCode = 400;
+      }
+      res.status(error.statusCode).send({ error: error.message });
+    }
+  }
+
+  async deleteById(req: Request, res: Response) {
+    try {
+      const token = req.headers.authorization!;
+
+      const id = req.params.id;
+
+      const tag: string = req.body.tag;
+
+      let message;
+
+      if (tag) {
+        const result = await photoBusiness.deleteTagFromPhoto(id, token, tag);
+
+        const message =
+          result === undefined ? "Nothing changed" : "Tag removed succesfully.";
+
+        res.status(201).send({ message });
+      } else {
+        await photoBusiness.deletePhotoById(id, token);
+        const message = "Photo deleted successfully."
+        res.status(201).send({ message });
+      }
     } catch (error) {
       if (!error.statusCode) {
         error.statusCode = 400;
@@ -89,7 +160,10 @@ export class PhotoController {
 
       const collection_id = req.params.collection_id;
 
-      const photos = await photoBusiness.getPhotosInCollection(collection_id, token);
+      const photos = await photoBusiness.getPhotosInCollection(
+        collection_id,
+        token
+      );
 
       res.status(201).send({ photos });
     } catch (error) {
@@ -107,8 +181,8 @@ export class PhotoController {
       const input: PhotoSearchInputDTO = {
         author: req.query.author as string,
         subtitle: req.query.subtitle as string,
-        tag: req.query.tag as string
-      }
+        tag: req.query.tag as string,
+      };
 
       const photo = await photoBusiness.getPhotoByCondition(input, token);
 
