@@ -47,7 +47,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAt
 ###
 
 GET http://localhost:4000/photo/all
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjM4NjQyNywiZXhwIjoxNjI2MzkxODI3fQ.7AwMuaLIFk2izvtNgjWldnPrHrKTGE0JpNuyE4mZDec
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjcyMzQ2MCwiZXhwIjoxNjI2NzI4ODYwfQ.HgL7wA4HNZUg6WH7e4lWODjnny2kBdYfxzut9iz6H8Y
 
 ###
 GET http://localhost:4000/photo/5c41cfe3-1062-4035-afda-0c2451e057aa
@@ -57,23 +57,23 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMwZjZmNmY4LThmYzMt
 
 
 POST http://localhost:4000/collection/create
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjEwNjQ4OSwiZXhwIjoxNjI2MTExODg5fQ.XdQ3kuAfzcFm25Tt9QCudTrVAhHOsQeyzq_o4efM6kA
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjcyMzQ2MCwiZXhwIjoxNjI2NzI4ODYwfQ.HgL7wA4HNZUg6WH7e4lWODjnny2kBdYfxzut9iz6H8Y
 Content-Type: application/json
 
 {
-    "title": "Batman",
-    "subtitle": "Characters from Batman's world",
+    "title": "delete",
+    "subtitle": "Cdeelteet",
     "image": "https://www.fundacred.org.br/site/wp-content/uploads/2017/02/batman-logo-big.gif"
 }
 
 ###
 
 POST http://localhost:4000/photo/5c41cfe3-1062-4035-afda-0c2451e057aa
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjI4NDgyNywiZXhwIjoxNjI2MjkwMjI3fQ.MMmfOUFYi32rBKPTWPFp8f94HQp8s473F8HsowfkD7o
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjcyMzQ2MCwiZXhwIjoxNjI2NzI4ODYwfQ.HgL7wA4HNZUg6WH7e4lWODjnny2kBdYfxzut9iz6H8Y
 Content-Type: application/json
 
 {
-   "collection_id": "7ea1e9d9-2b19-48b9-83cc-db6b6a8800fa"
+   "collection_id": "ac53de96-9184-4fa6-9396-9d4d83f3a3d5"
 }
 
 
@@ -88,3 +88,25 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMwZjZmNmY4LThmYzMt
 ###
 GET http://localhost:4000/photo/collection/8b4356dc-21a9-4ebf-b2cb-253628e7be97
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjM4MDI1NiwiZXhwIjoxNjI2Mzg1NjU2fQ.N9EYSbhvF6dFkTwMNuXYjBHHsu-ueYoDzxwkahnsuI0
+
+###
+GET http://localhost:4000/photo/user/022e1ede-40f0-44f5-b76c-f4709494e29b
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjcyMzQ2MCwiZXhwIjoxNjI2NzI4ODYwfQ.HgL7wA4HNZUg6WH7e4lWODjnny2kBdYfxzut9iz6H8Y
+
+###
+DELETE http://localhost:4000/collection/ac53de96-9184-4fa6-9396-9d4d83f3a3d5
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjcyMzQ2MCwiZXhwIjoxNjI2NzI4ODYwfQ.HgL7wA4HNZUg6WH7e4lWODjnny2kBdYfxzut9iz6H8Y
+
+###
+PUT http://localhost:4000/collection/8b4356dc-21a9-4ebf-b2cb-253628e7be97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjcyMzQ2MCwiZXhwIjoxNjI2NzI4ODYwfQ.HgL7wA4HNZUg6WH7e4lWODjnny2kBdYfxzut9iz6H8Y
+Content-Type: application/json
+
+{
+    "title": "Batman"
+
+}
+
+###
+DELETE http://localhost:4000/photo/8b4356dc-21a9-4ebf-b2cb-253628e7be97/ca7c99ce-b9a3-4df4-a6d6-8e29f0ea4976
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMmUxZWRlLTQwZjAtNDRmNS1iNzZjLWY0NzA5NDk0ZTI5YiIsImlhdCI6MTYyNjcyMzQ2MCwiZXhwIjoxNjI2NzI4ODYwfQ.HgL7wA4HNZUg6WH7e4lWODjnny2kBdYfxzut9iz6H8Y

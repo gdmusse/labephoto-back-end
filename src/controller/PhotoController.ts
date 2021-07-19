@@ -100,9 +100,26 @@ export class PhotoController {
         res.status(201).send({ message });
       } else {
         await photoBusiness.deletePhotoById(id, token);
-        const message = "Photo deleted successfully."
+        const message = "Photo deleted successfully.";
         res.status(201).send({ message });
       }
+    } catch (error) {
+      if (!error.statusCode) {
+        error.statusCode = 400;
+      }
+      res.status(error.statusCode).send({ error: error.message });
+    }
+  }
+
+  async getByAuthorId(req: Request, res: Response) {
+    try {
+      const token = req.headers.authorization!;
+
+      const author_id = req.params.author_id;
+
+      const photo = await photoBusiness.getPhotosByAuthorId(author_id, token);
+
+      res.status(201).send({ photo });
     } catch (error) {
       if (!error.statusCode) {
         error.statusCode = 400;
@@ -151,6 +168,31 @@ export class PhotoController {
       } else {
         res.status(error.statusCode).send({ error: error.message });
       }
+    }
+  }
+
+  async removeFromCollection(req: Request, res: Response) {
+    try {
+      const token = req.headers.authorization!;
+
+      const collection_id = req.params.collection_id;
+
+      const photo_id = req.params.photo_id;
+
+      await photoBusiness.removePhotoFromCollection(
+        collection_id,
+        token,
+        photo_id
+      );
+
+      let message = "Photo removed from collection successfully!";
+
+      res.status(201).send({ message });
+    } catch (error) {
+      if (!error.statusCode) {
+        error.statusCode = 400;
+      }
+      res.status(error.statusCode).send({ error: error.message });
     }
   }
 

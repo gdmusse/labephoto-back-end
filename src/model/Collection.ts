@@ -60,5 +60,11 @@ export class Collection {
 export interface PhotoCollectionInputDTO {
   title: string;
   subtitle: string;
-  image: string;
+  image?: string;
+}
+
+export interface PhotoCollectionUpdateInputDTO {
+  title?: string;
+  subtitle?: string;
+  image?: string;
 }

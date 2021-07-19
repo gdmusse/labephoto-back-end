@@ -20,173 +20,269 @@ export class PhotoBusiness {
   ) {}
 
   public async createPhoto(photo: PhotoInputDTO, token: string) {
-    if (!photo.subtitle || !photo.file || !photo.tags) {
-      throw new BaseError(422, "Missing input");
+    try {
+      if (!photo.subtitle || !photo.file || !photo.tags) {
+        throw new BaseError(422, "Missing input");
+      }
+
+      const verifiedToken = this.authenticator.getData(token);
+
+      const id = this.idGenerator.generate();
+
+      var now = dayjs().format("YYYY-MM-DD HH:mm:ss");
+
+      return await this.photoDatabase.createPhoto(
+        new Photo(
+          id,
+          photo.subtitle,
+          verifiedToken.id,
+          now,
+          photo.file,
+          photo.tags,
+          []
+        )
+      );
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
     }
-
-    const verifiedToken = this.authenticator.getData(token);
-
-    const id = this.idGenerator.generate();
-
-    var now = dayjs().format("YYYY-MM-DD HH:mm:ss");
-
-    return await this.photoDatabase.createPhoto(
-      new Photo(
-        id,
-        photo.subtitle,
-        verifiedToken.id,
-        now,
-        photo.file,
-        photo.tags,
-        []
-      )
-    );
   }
 
   public async getAllPhotos(token: string) {
-    
+    try {
+      const verifiedToken = this.authenticator.getData(token);
 
-    const verifiedToken = this.authenticator.getData(token);
+      const photos = await this.photoDatabase.getAllPhotos(verifiedToken.id);
 
-    const photos = await this.photoDatabase.getAllPhotos(verifiedToken.id);
+      if (photos.length === 0) {
+        throw new BaseError(404, "No photos created yet");
+      }
 
-    if (photos.length === 0) {
-      throw new BaseError(404, "No photos created yet");
+      return photos;
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
     }
-
-    return photos;
   }
 
-  
-  public async updatePhotoById(id: string, token: string, photo: PhotoUpdateInputDTO) {
-    if (!photo.subtitle && !photo.file) {
-      throw new BaseError(422, "Nothing changed.");
+  public async updatePhotoById(
+    id: string,
+    token: string,
+    photo: PhotoUpdateInputDTO
+  ) {
+    try {
+      if (!photo.subtitle && !photo.file) {
+        throw new BaseError(422, "Nothing changed.");
+      }
+
+      const verifiedToken = this.authenticator.getData(token);
+
+      const photoUpdated = await this.photoDatabase.updatePhoto(
+        id,
+        photo,
+        verifiedToken.id
+      );
+
+      return photoUpdated;
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
     }
-
-    const verifiedToken = this.authenticator.getData(token);
-
-    const photoUpdated = await this.photoDatabase.updatePhoto(id, photo, verifiedToken.id);
-
-    return photoUpdated;
   }
 
   public async addTagToPhoto(id: string, token: string, tag: string) {
-    if (!tag) {
-      throw new BaseError(422, "Missing input");
+    try {
+      if (!tag) {
+        throw new BaseError(422, "Missing input");
+      }
+
+      const verifiedToken = this.authenticator.getData(token);
+
+      const photoUpdated = await this.photoDatabase.addTagToPhoto(
+        id,
+        tag,
+        verifiedToken.id
+      );
+
+      return photoUpdated;
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
     }
-
-    const verifiedToken = this.authenticator.getData(token);
-
-    const photoUpdated = await this.photoDatabase.addTagToPhoto(id, tag, verifiedToken.id);
-
-    return photoUpdated;
   }
 
   public async deletePhotoById(id: string, token: string) {
+    try {
+      const verifiedToken = this.authenticator.getData(token);
 
-    const verifiedToken = this.authenticator.getData(token);
+      const photoUpdated = await this.photoDatabase.deletePhoto(
+        id,
+        verifiedToken.id
+      );
 
-    const photoUpdated = await this.photoDatabase.deletePhoto(id, verifiedToken.id);
-
-    return photoUpdated;
+      return photoUpdated;
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
   }
 
-    
   public async deleteTagFromPhoto(id: string, token: string, tag: string) {
-    if (!tag) {
-      throw new BaseError(422, "Missing input");
+    try {
+      if (!tag) {
+        throw new BaseError(422, "Missing input");
+      }
+
+      const verifiedToken = this.authenticator.getData(token);
+
+      const photoUpdated = await this.photoDatabase.deleteTagFromPhoto(
+        id,
+        tag,
+        verifiedToken.id
+      );
+
+      return photoUpdated;
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
     }
+  }
 
-    const verifiedToken = this.authenticator.getData(token);
+  public async getPhotosByAuthorId(author_id: string, token: string) {
+    try {
+      const verifiedToken = this.authenticator.getData(token);
 
-    const photoUpdated = await this.photoDatabase.deleteTagFromPhoto(id, tag, verifiedToken.id);
+      const photo = await this.photoDatabase.getPhotosByAuthorId(author_id);
 
-    return photoUpdated;
+      if (photo === null) {
+        throw new BaseError(404, "No photos were created by this user");
+      }
+
+      return photo;
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
   }
 
   public async getPhotoById(id: string, token: string) {
+    try {
+      const verifiedToken = this.authenticator.getData(token);
 
+      const photo = await this.photoDatabase.getPhotoById(id, verifiedToken.id);
 
-    const verifiedToken = this.authenticator.getData(token);
+      if (photo === null) {
+        throw new BaseError(404, "Photo not found");
+      }
 
-    const photo = await this.photoDatabase.getPhotoById(id, verifiedToken.id);
-
-    if (photo === null) {
-      throw new BaseError(404, "Photo not found");
+      return photo;
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
     }
-
-    return photo;
   }
 
   public async addPhotoToCollection(
     input: PhotoToCollectionInputDTO,
     token: string
   ) {
-    if (!input.photo_id || !input.collection_id) {
-      throw new BaseError(422, "Missing input");
+    try {
+      if (!input.photo_id || !input.collection_id) {
+        throw new BaseError(422, "Missing input");
+      }
+
+      const verifiedToken = this.authenticator.getData(token);
+
+      const photo = await this.photoDatabase.getPhotoById(
+        input.photo_id,
+        verifiedToken.id
+      );
+
+      if (photo === null) {
+        throw new BaseError(404, "Photo not found");
+      }
+
+      const alreadyAdded = await this.photoDatabase.checkPhotoInCollection(
+        input
+      );
+
+      if (alreadyAdded) {
+        throw new BaseError(404, "Photo is already added to collection");
+      }
+
+      var now = dayjs().format("YYYY-MM-DD HH:mm:ss");
+
+      const output: PhotoToCollectionOutputDTO = {
+        photo_id: input.photo_id,
+        collection_id: input.collection_id,
+        date: now,
+      };
+
+      return await this.photoDatabase.addPhotoToCollection(output);
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
     }
+  }
 
-    const verifiedToken = this.authenticator.getData(token);
+  public async removePhotoFromCollection(
+    collection_id: string,
+    token: string,
+    photo_id: string
+  ) {
+    try {
+      const verifiedToken = this.authenticator.getData(token);
 
-    const photo = await this.photoDatabase.getPhotoById(input.photo_id, verifiedToken.id);
-
-    if (photo === null) {
-      throw new BaseError(404, "Photo not found");
+      await this.photoDatabase.removePhotoFromCollection(
+        collection_id,
+        photo_id
+      );
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
     }
-
-    const alreadyAdded = await this.photoDatabase.checkPhotoInCollection(input);
-
-    if (alreadyAdded) {
-      throw new BaseError(404, "Photo is already added to collection");
-    }
-
-    var now = dayjs().format("YYYY-MM-DD HH:mm:ss");
-
-    const output: PhotoToCollectionOutputDTO = {
-      photo_id: input.photo_id,
-      collection_id: input.collection_id,
-      date: now,
-    };
-
-    return await this.photoDatabase.addPhotoToCollection(output);
   }
 
   public async getPhotosInCollection(id: string, token: string) {
-    const photos = await this.photoDatabase.getPhotosInCollection(id);
+    try {
+      const photos = await this.photoDatabase.getPhotosInCollection(id);
 
-    const verifiedToken = this.authenticator.getData(token);
+      const verifiedToken = this.authenticator.getData(token);
 
-    if (photos === null) {
-      throw new BaseError(404, "No photo was added to this collection yet.");
+      if (photos === null) {
+        throw new BaseError(404, "No photo was added to this collection yet.");
+      }
+
+      return photos;
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
     }
-
-    return photos;
   }
 
   public async getPhotoByCondition(input: PhotoSearchInputDTO, token: string) {
-    if (
-      input.author === undefined &&
-      input.subtitle === undefined &&
-      input.tag === undefined
-    ) {
-      throw new BaseError(422, "Missing input");
+    try {
+      if (
+        input.author === undefined &&
+        input.subtitle === undefined &&
+        input.tag === undefined
+      ) {
+        throw new BaseError(422, "Missing input");
+      }
+
+      const verifiedToken = this.authenticator.getData(token);
+
+      const photos = input.subtitle
+        ? await this.photoDatabase.searchPhotoBySubtitle(
+            input.subtitle,
+            verifiedToken.id
+          )
+        : input.author
+        ? await this.photoDatabase.searchPhotoByAuthor(
+            input.author,
+            verifiedToken.id
+          )
+        : input.tag
+        ? await this.photoDatabase.searchPhotoByTag(input.tag, verifiedToken.id)
+        : null;
+
+      if (photos === null) {
+        throw new BaseError(404, "Sorry! No photo was found.");
+      }
+
+      return photos;
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
     }
-
-    const verifiedToken = this.authenticator.getData(token);
-
-    const photos = input.subtitle
-      ? await this.photoDatabase.searchPhotoBySubtitle(input.subtitle, verifiedToken.id)
-      : input.author
-      ? await this.photoDatabase.searchPhotoByAuthor(input.author, verifiedToken.id)
-      : input.tag
-      ? await this.photoDatabase.searchPhotoByTag(input.tag, verifiedToken.id)
-      : null;
-
-    if (photos === null) {
-      throw new BaseError(404, "Sorry! No photo was found.");
-    }
-
-    return photos;
   }
 }
 

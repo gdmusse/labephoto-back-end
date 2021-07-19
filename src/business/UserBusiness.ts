@@ -14,56 +14,64 @@ export class UserBusiness {
   ) {}
 
   public async createUser(user: UserInputDTO) {
-    if (!user.name || !user.email || !user.password || !user.nickname) {
-      throw new BaseError(422, "Missing input");
+    try {
+      if (!user.name || !user.email || !user.password || !user.nickname) {
+        throw new BaseError(422, "Missing input");
+      }
+
+      if (user.email.indexOf("@") === -1) {
+        throw new BaseError(422, "Invalid email");
+      }
+
+      if (user.password.length < 6) {
+        throw new BaseError(422, "Invalid password");
+      }
+
+      const id = this.idGenerator.generate();
+
+      const hashPassword = await this.hashManager.hash(user.password);
+
+      await this.userDatabase.createUser(
+        new User(id, user.name, user.email, user.nickname, hashPassword)
+      );
+
+      const accessToken = this.authenticator.generateToken({
+        id,
+      });
+
+      return accessToken;
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
     }
-
-    if (user.email.indexOf("@") === -1) {
-      throw new BaseError(422, "Invalid email");
-    }
-
-    if (user.password.length < 6) {
-      throw new BaseError(422, "Invalid password");
-    }
-
-    const id = this.idGenerator.generate();
-
-    const hashPassword = await this.hashManager.hash(user.password);
-
-    await this.userDatabase.createUser(
-      new User(id, user.name, user.email, user.nickname, hashPassword)
-    );
-
-    const accessToken = this.authenticator.generateToken({
-      id,
-    });
-
-    return accessToken;
   }
 
   async getUserByEmailOrNickname(user: LoginInputDTO) {
-    let userFromDB = user.email
-      ? await this.userDatabase.getUserByEmail(user.email)
-      : await this.userDatabase.getUserByNickname(user.nickname);
+    try {
+      let userFromDB = user.email
+        ? await this.userDatabase.getUserByEmail(user.email)
+        : await this.userDatabase.getUserByNickname(user.nickname);
 
-    if (!userFromDB) {
-      throw new BaseError(404, "User not found");
+      if (!userFromDB) {
+        throw new BaseError(404, "User not found");
+      }
+
+      const hashCompare = await this.hashManager.compare(
+        user.password,
+        userFromDB.getPassword()
+      );
+
+      const accessToken = this.authenticator.generateToken({
+        id: userFromDB.getId(),
+      });
+
+      if (!hashCompare) {
+        throw new Error("Invalid Password!");
+      }
+
+      return accessToken;
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
     }
-
-    const hashCompare = await this.hashManager.compare(
-      user.password,
-      userFromDB.getPassword()
-    );
-
-    const accessToken = this.authenticator.generateToken({
-      id: userFromDB.getId(),
-    });
-
-    if (!hashCompare) {
-      throw new Error("Invalid Password!");
-    }
-
-    return accessToken;
   }
 }
 
