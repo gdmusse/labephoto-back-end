@@ -199,6 +199,57 @@ export class PhotoDatabase extends BaseDatabase {
     }
   }
 
+  public async getPhotosByAuthorId(author_id: string): Promise<Array<Photo>> {
+    try {
+      const outerThis = this;
+      const result = await this.getConnection()
+        .select(
+          `${this.photosTable}.*`,
+          this.getConnection().raw(
+            `GROUP_CONCAT(${this.tagsTable}.tag) as tags`
+          ),
+          this.getConnection().raw(`${this.usersTable}.nickname as author`),
+          this.getConnection().raw(
+            `GROUP_CONCAT(DISTINCT ${this.collectionsTable}.title) as collections`
+          )
+        )
+        .from(`${this.photosTable}`)
+        .join(
+          `${this.tagsTable}`,
+          `${this.photosTable}.id `,
+          `=`,
+          `${this.tagsTable}.photo_id`
+        )
+        .join(
+          `${this.usersTable}`,
+          `${this.photosTable}.author`,
+          `=`,
+          `${this.usersTable}.id`
+        )
+        .leftJoin(
+          `${this.collectionsPhotosTable}`,
+          `${this.photosTable}.id`,
+          `=`,
+          `${this.collectionsPhotosTable}.photo_id`
+        )
+        .leftJoin(`${this.collectionsTable}`, function () {
+          this.on(
+            `${outerThis.collectionsTable}.id`,
+            `=`,
+            `${outerThis.collectionsPhotosTable}.collection_id`
+          ).onIn(`${outerThis.collectionsTable}.author_id`, [author_id]);
+        })
+        .where({author: author_id})
+        .groupBy(`${this.photosTable}.id`);
+      result.forEach((photo: any) => {
+        photo.date = dayjs(photo.date).format("YYYY-MM-DD HH:mm:ss");
+      });
+      return result;
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
   public async getPhotoById(
     photo_id: string,
     id: string
@@ -265,6 +316,20 @@ export class PhotoDatabase extends BaseDatabase {
           date: collection.date,
         })
         .into(this.collectionsPhotosTable);
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  public async removePhotoFromCollection(
+    collection_id: string,
+    photo_id: string
+  ): Promise<void> {
+    try {
+      await this.getConnection()
+        .delete()
+        .from(this.collectionsPhotosTable)
+        .where({photo_id, collection_id})
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
     }
