@@ -20,7 +20,6 @@ const static_dir =
 app.use(express.static(join(static_dir)));
 
 app.get("/", function (req, res) {
-  console.log(__dirname);
   res.sendFile(join(static_dir, "index.html"));
 });
 
